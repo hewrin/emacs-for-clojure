@@ -1,0 +1,1 @@
+("~/Desktop/rocklog/lambdaroyal-memory/" "~/Desktop/rocklog/rocklog-vlic/" "~/Desktop/clojure/emacs-test/")

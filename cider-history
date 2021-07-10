@@ -1,0 +1,133 @@
+;; -*- coding: utf-8-unix -*-
+;; Automatically written history of CIDER REPL session
+;; Edit at your own risk
+
+("(reset! state (update @state :finished not))" "(reset! (update @state :finished not))" "(update @state :finished not)" "(update @state :finished (true))" "(def state (atom {:coll [] :finished true}))" "(update @state :finished not)" "(update @state :finished (true))" "(update @state :finished true)" "(reset! state (update @state :coll conj \"World\"))" "(reset! state (update @state :coll conj \"Hello\"))" "(def state (atom {:coll [] :finished true}))" "state" "(swap! state (update @state :coll conj \"Hello\"))" "(update @state :coll conj \"Hello\")" "(update state :coll conj \"Hello\")" "(def state (atom {:coll [] :finished true}))" "(conj (:coll @state) \"Hello\")" "(update state :coll #(conj (:coll @state) \"Hello\"))" "(update-in state [:coll] #(conj (:coll @state) \"World\"))" "(update-in state [:coll] #(conj (:coll #state) \"World\"))" "(update-in state [:coll] #(conj (:coll #state) \"World\")))" "(update-in state [:coll] #(conj (:coll #state) \"World\"))" "(update-in state [:coll] assoc \"hello\")" "(update-in state [:coll] conj \"hello\")" "(update-in state [:coll] (conj \"hello\"))" "state" "(def state (atom {:coll [] :finished true}))" "state" "(reset! state {:coll (conj (:coll @state) \"World\")})" "(def state (atom {:coll [] :finished true}))" "(reset! state {:coll (conj (:coll @state) \"World\")})" "(conj (:coll @state) \"World\")" "@state" "(reset! state {:coll (conj (:coll @state) \"Hello\")})" "(def state (atom {:coll []}))" "state" "(:coll @state)" "(reset! state {:col (conj (:coll @state) \"Hello\")})" "(def state (atom {:coll []}))" "(conj [\"a\"] \"a\")" "(conj [] \"a\")" "(reset! state {:col (conj (:coll @state) \"World2\")})" "(reset! state {:col (conj (:coll @state) \"World\")})" "(def state (atom {:coll []}))" "(:coll @state)" "state" "(reset! state (conj (:coll @state) \"World\"))" "state" "(reset! state (conj (:coll @state) \"Hello\"))" "(def state (atom {:coll []}))" "(update @state :coll conj \"hello\")" "(update state :coll #(conj (:coll %) \"hello\"))" "(update state :coll #(conj (:coll state) \"hello\"))" "(update state :coll (conj (:coll state) \"hello\"))" "(def state (atom {:coll []}))" "state" "(swap! state assoc state (conj (:coll state) \"heelo\"))" "(swap! state assoc (conj (:coll state) \"heelo\"))" "(conj [] \"h\")" "(update state assoc (conj (:coll state) \"heelo\"))" "(update state assoc (:coll conj \"heelo\"))" "(update state assoc :coll conj \"heelo\")" "(def state (atom {:coll []}))" "(.peek queue)" " (with-tx
+   @lambdaroyal.vlic.main/system)" " (with-tx
+   @lambdaroyal.vlic.main/system
+   (dosync
+    (let [cardmeta (tx/select-first *tx* :cardmeta \"stock-order-dispatch-item\")]
+      (doseq [[attr value] (last cardmeta)]
+        (if (map? value)
+          (doseq [key (keys value)]
+            (if (and (keyword? key) (.startsWith (-> key name) \"clojure.core$type\"))
+              (let [newValue (assoc (dissoc value key) :type (get value key))
+                    _ (println :newValue attr newValue)]
+                ;;(tx/alter-document *tx* :cardmeta cardmeta assoc attr newValue :foo \"foo\")
+                ))))))))" "(with-tx)" " (with-tx
+   @lambdaroyal.vlic.main/system
+   (dosync
+    (let [cardmeta (tx/select-first *tx* :cardmeta \"stock-order-dispatch-item\")]
+      (doseq [[attr value] (last cardmeta)]
+        (if (map? value)
+          (doseq [key (keys value)]
+            (if (and (keyword? key) (.startsWith (-> key name) \"clojure.core$type\"))
+              (let [newValue (assoc (dissoc value key) :type (get value key))
+                    _ (println :newValue attr newValue)]
+                ;;(tx/alter-document *tx* :cardmeta cardmeta assoc attr newValue :foo \"foo\")
+                ))))))))" "@lambdaroyal.vlic.main/system
+
+
+
+
+
+
+
+
+
+
+" "lambdaroyal.vlic.main/system
+
+
+
+
+
+
+
+
+
+
+" "(lambdaroyal.vlic.main/system)
+
+
+
+
+
+
+
+
+
+
+" "x" "(.peek queue)" "(peek queue)" "queue" "(def queue (let [wal-files-config-builder (WalFilesConfig/builder)
+           wal-files-config-builder (.maxCount wal-files-config-builder (int 2048))
+           wal-files-config-builder (.build wal-files-config-builder)
+
+           compressed-files-config-builder (CompressedFilesConfig/builder)
+           compressed-files-config-builder (.maxSizeBytes compressed-files-config-builder (* 1024 1024 16))
+           compressed-files-config-builder (.build compressed-files-config-builder)
+
+           queue (FileQueue/synced)
+           queue (.name queue \"popa\")
+           queue (.folder queue (.getAbsolutePath (clojure.java.io/file (System/getProperty \"java.io.tmpdir\") \"vlic/wal\")))
+           queue (.serializer queue Serializer/STRING)
+           queue (.deserializer queue Deserializer/STRING)
+           queue (.restoreFromDisk queue true)
+           queue (.wal queue wal-files-config-builder)
+           queue (.compressed queue compressed-files-config-builder)
+           queue (.build queue)]))
+
+                   " "queue" "(def files (clojure.java.io/file (System/getProperty \"java.io.tmpdir\") \"vlic/wal\"))" "lambdaroyal.vlic.main> (def x (atom false))" "lambdaroyal.vlic.main> (def x (atom false))
+" "lambdaroyal.vlic.main> (def x (atom false))" "lambdaroyal.vlic.main> 
+*** Closed on Tue Jul  6 16:18:45 2021 ***
+
+*** Closed on Tue Jul  6 16:21:26 2021 ***
+(+ 1 2)
+" "lambdaroyal.vlic.main> 
+*** Closed on Tue Jul  6 16:18:45 2021 ***
+
+*** Closed on Tue Jul  6 16:21:26 2021 ***
+(+ 1 2)" " waiting for an empty queue
+CompilerException java.lang.AbstractMethodError: Method lambdaroyal/vlic/system/ComposedEvictionChannel.stop()Ljava/lang/Object; is abstract, compiling:(/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/lambdaroyal/vlic/crosscutting/test_migration_mongodb.clj:35:1) 
+
+lambdaroyal.vlic.main> 
+*** Closed on Tue Jul  6 15:47:23 2021 ***
+" "(.listFiles (io/file (System/getProperty \"java.io.tmpdir\") \"vlic/wal\"))" "true:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+:getting-config :namespace #namespace[lambdaroyal.vlic.crosscutting.job-dispatch]
+
+lambdaroyal.vlic.main> (+ 12 12)
+*** Closed on Tue Jul  6 12:34:46 2021 ***
+" "(delete-directory-recursive fileName)" "(defn delete-directory-recursive
+  \"Recursively delete a directory.\"
+  [^java.io.File file]
+  ;; when `file` is a directory, list its entries and call this
+  ;; function with each entry. can't `recur` here as it's not a tail
+  ;; position, sadly. could cause a stack overflow for many entries?
+  (when (.isDirectory file)
+    (doseq [file-in-dir (.listFiles file)]
+      (delete-directory-recursive file-in-dir)))
+  ;; delete the file or directory. if it it's a file, it's easily
+  ;; deletable. if it's a directory, we already have deleted all its
+  ;; contents with the code above (remember?)
+  (io/delete-file file))" "fileName" "(def fileName (clojure.java.io/file (System/getProperty \"java.io.tmpdir\") \"vlic/wal\"))" "(def fileName ((System/getProperty \"java.io.tmpdir\") \"vlic/wal\"))" "(def fileName ( (System/getProperty \"java.io.tmpdir\") \"vlic/wal\"))" "(def fileName (System/getProperty \"java.io.tmpdir\") \"vlic/wal\")" "(let [_ (System/setProperty \"mongodb_username\" \"rocklogmongo\")
+      _  (System/setProperty \"mongodb_password\" \"WGM8ioTWdhtO8CpV\")
+      _  (System/setProperty \"mongodb_posturl\" \"test-frankfurt-shard-00-00.ijxnz.mongodb.net:27017,test-frankfurt-shard-00-01.ijxnz.mongodb.net:27017,test-frankfurt-shard-00-02.ijxnz.mongodb.net:27017/test?ssl=true&replicaSet=atlas-wijjq2-shard-0&authSource=admin&retryWrites=true&w=majority\")
+      _  (System/setProperty \"mongodb_preurl\" \"mongodb://\")
+      _  (System/setProperty \"mongodb_dbname\" \"test\")])")

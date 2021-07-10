@@ -1,0 +1,115 @@
+;;; -*- coding: utf-8 -*-
+
+;; ----- ido-last-directory-list -----
+(
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/src/lambdaroyal/vlic/crosscutting/" . "interface/")
+ ("/Users/farisroslan/Desktop/" . "rocklog/")
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/test/lambdaroyal/memory/" . "eviction/")
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/test/lambdaroyal/" . "memory/")
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/test/" . "lambdaroyal/")
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/" . "src/")
+ ("/Users/farisroslan/Desktop/rocklog/" . "rocklog-vlic/")
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/src/lambdaroyal/vlic/" . "crosscutting/")
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/src/lambdaroyal/" . "vlic/")
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/src/" . "lambdaroyal/")
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/lambdaroyal/memory/" . "abstraction/")
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/lambdaroyal/" . "memory/")
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/lambdaroyal/vlic/" . "crosscutting/")
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/" . "lambdaroyal/")
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/" . "src/")
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/lambdaroyal/memory/" . "core/")
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/" . "lambdaroyal/")
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/lambdaroyal/" . "memory/")
+ ("/Users/farisroslan/Desktop/clojure/emacs-test/src/" . "emacs_test/")
+ ("/Users/farisroslan/Desktop/clojure/emacs-test/" . "src/")
+)
+
+;; ----- ido-work-directory-list -----
+(
+ "/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/lambdaroyal/memory/eviction/"
+ "/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/lambdaroyal/memory/migration/"
+ "/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/test/lambdaroyal/memory/eviction/"
+ "/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/lambdaroyal/vlic/crosscutting/"
+ "/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/lambdaroyal/"
+ "/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/lambdaroyal/memory/core/"
+ "/Users/farisroslan/Desktop/clojure/emacs-test/src/emacs_test/"
+ "/Users/farisroslan/Desktop/clojure/emacs-test/"
+)
+
+;; ----- ido-work-file-list -----
+(
+ "core.clj"
+ "project.clj"
+)
+
+;; ----- ido-dir-file-cache -----
+(
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/src/lambdaroyal/vlic/crosscutting/interface/" (24756 36405 517317 682000) "reader.clj" "odoo_bridge.clj" "file_export.clj" "file_export_rule.clj" "error_log.clj" "writer.clj" "file_import.clj" "fieldset.clj" "api_endpoint.clj" "call_api_endpoint_rule.clj" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/" (24808 31388 61812 882000) "src/" "console/" "test-resources/" "fonts.list" ".vscode/" ".git/" "src-java/" "doc/" "log/" "src_docs/" ".project" ".settings/" "licences/" "package.json" "package-lock.json" ".gitignore" "public/" "ssh/" "yarn.lock" ".lein-repl-history" "README.md" ".emacs.d" "test-java/" "dev-resources/" "pretest.sh" "docs/" "version.js" ".classpath" ".yarnclean" "pom.xml" "node_modules/" "resources/" "test.csv" "target/" ".lsp/" "Makefile" "Dockerfile" ".clj-kondo/" "invoices.json" "test/" ".DS_Store" "index.html" ".calva/" ".dir-locals.el" "project.clj" ".lein-failures" "../" "./")
+
+ ("/Users/farisroslan/.emacs.d/" (24808 35021 357351 269000) ".smex-items" "cider-history" "backups/" "themes/" "elpa/" ".recentf" "init.el" "auto-save-list/" "projectile-bookmarks.eld" "customizations/" "ido.last" "ac-comphist.dat" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/" (24808 9499 74714 390000) "src/" "tmp/" ".git/" "doc/" "package.json" ".gitignore" ".lein-repl-history" "README.md" "relnotes.md" "pom.xml" "resources/" "target/" ".lsp/" "test/" "LICENSE" ".calva/" "design/" "project.clj" ".lein-failures" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/lambdaroyal/memory/core/" (24806 35390 466895 102000) "tx.clj" "context.clj" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/src/lambdaroyal/vlic/crosscutting/" (24798 57220 621667 600000) "internal_proxy_handler.clj" "search.clj" "sysstate.clj" "snapin.clj" "cardmeta.clj" "call_internal_proxy_rest_endpoint_rule.clj" "postinstall.clj" "user.clj" "remote.clj" "oauthstate.clj" "mapreduce.clj" "job_dispatch.clj" "system_config.clj" "file_export.clj" "image_repo.clj" "onlinestats.clj" "spreadsheet_processor.clj" "parts_list.clj" "session.clj" "boundary.clj" "stream_processing.clj" "parts_list_common.clj" "hierarchical_data_input.clj" "apikey.clj" "password_reset.clj" "numberrange_glue.clj" "webservice_boundary.clj" "db_facade.clj" "landing_page.clj" "cardimport.clj" "cardaction.clj" "news.clj" "email_export_rule.clj" "postinstall_2021.clj" "custom_rule.clj" "email_config.clj" "vlic_rule.clj" "plansearch.clj" "numberrange.clj" "postinstall_2020.clj" "worldmap.clj" "runtime_xslt.clj" "locale.clj" "card_layout.clj" "cardtag.clj" "io_helper.clj" "job.clj" "rest.clj" "crypt.clj" "timing_aspect.clj" "postinstall_2019.clj" "tx_decorator.clj" "autobahn.clj" "httpserver.clj" "autobahn_services.clj" "playground.clj" "tabin.clj" "interface/" "datastructures.clj" "data_filter.clj" "runtime_namespace.clj" "tx_publisher.clj" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/ssh/" (24775 5854 383809 58000) "known_hosts" "cx_94bf69f3bd284a7f8f418a50ee9888a4_pkey" "cx_6251718fd92a52153876ccffc1b5aacd_pkey" "id_rsa.pub" "id_ecdsa.pub" "id_rsa" "id_ecdsa" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/lambdaroyal/memory/migration/" (24797 28542 778288 143000) "mongodb.clj" "../" "./")
+
+ ("/Users/farisroslan/Desktop/" (24804 18206 64941 200000) "Scaling MongoDB.epub" "Export-76b889c4-c5ac-467b-b9af-0244c9b509c2-1/" "new_books/" "image.png" "athens/" "PostcoAgentMobile Files.zip" "shikin pendrive/" "phub_arau_perlis.png" "PostcoPics/" "PostcoPics.zip" "Working Backwards_ Insights, Stories, and Secrets from Inside Amazon.azw3" "small_test_data (1).json" "Screenrecording_20210706_190411.mp4" "Sid Meier's Memoir!.epub" "Programming Books/" "add_java_opts.sh" "Accidental genius_ using writing to generate your best ideas, insights, and content.epub" "nginx.conf" "The Reign of Wolf 21_ The Saga of Yellowstone's Legendary Druid Pack.epub" "BusinessRegsitrationStuff/" "elixir1.6/" "postco-logo-white.png" "computer-book/" "get_contact.rb" "development.key" "Bootstrapping_ Douglas Engelbart.epub" "rocklog_images2.rb" "sendo_csv.rb" "The score takes care of itself.epub" "Energy Paradox _ What to Do When Your Get-up-and-go Has Got Up and Gone.epub" "Masterminds of Programming.epub" "5_6201570245824479521.yml" "development.yml.enc" "16a5904c509-0732.json" "rocklog_images3.rb" "halo.zip" "Export-76b889c4-c5ac-467b-b9af-0244c9b509c2/" "PostcoAgentMobile Files/" "Emacs-27.2-2-universal.dmg" "courses/" "ruby-proxy/" "The Data Warehouse Toolkit.epub" "Gridiron genius_ a master class in winning championships and building dynasties in the NFL.epub" "Screenshot 2021-05-05 at 11.33.54 AM.png" "gitflow/" "Tools for Thought.epub" "Export-76b889c4-c5ac-467b-b9af-0244c9b509c2.zip" "Books/" "Think and Grow Rich!/" "release/" "test.json" "tuber-dev.sql" "TDDClass/" "shopify/" "ImportantMUSTNOTLOSE.zip" "faris.jpeg" ".byebug_history" ".firebaserc" "test.csv" "Athens-1.0.0-beta.60.dmg" "projects/" "mongodb_perf_check/" "A Philosophy of Software Design.epub" "Tools for Thought.mobi" "env.local" "TH_Storemanager.rb" "small_test_data.json" ".localized" "clojure/" "test_json.rb" "sendo-agent.csv" "16a5904c509-0732 (1).json" ".ruby-version" "postco-agent-keystore-values" "google_play.json" ".DS_Store" "roam-vscode/" "go/" "Terry Pratchett - Men at Arms (Discworld, #15) (1997) (2).pdf" "Learning GNU Emacs, 3rd Edition.epub" "Surely You're Joking, Mr. Feynman!.epub" "movie/" "An Attacker Looks at Docker- Approaching Multi-Container Applications.pdf" "warhammer/" "rocklog/" "postco-mobile-agent.jks" "MongoDB_ The Definitive Guide_ Powerful and Scalable Data Storage 3rd Edition.epub" "Dump20190305.sql" "Screenrecording_20210706_175905.mp4" "vim/" "BasicAggregations_Drill.txt" "Screens v2 copy.key" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/test/" (24730 8657 96278 821000) "stats/" "lambdaroyal/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/test/lambdaroyal/" (24730 8657 88283 575000) "memory/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/test/lambdaroyal/memory/" (24788 2306 325786 32000) "eviction/" "ui_helper.clj" "storage/" "helper.clj" "core/" "abstraction/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/test/lambdaroyal/memory/eviction/" (24797 15567 122850 437000) "test_couchdb_insert_into_empty_instance.clj" "test_eviction_order.clj" "test_core.clj" "test_migration.clj" "test_couchdb_queue_rampup.clj" "test_couchdb_protocols.clj" "test_wal_log_basics.clj" "test_couchdb.clj" "test_couchdb_stm_reduction.clj" "test_mongodb_dynamic_collections.clj" "test_mongodb.clj" "test_mongodb_queue_rampup.clj" "test_couchdb_dynamic_collections.clj" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/lambdaroyal/memory/eviction/" (24797 14693 395205 695000) "core.clj" "mongodb.clj" "wal.clj" "couchdb.clj" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/" (24795 58266 541866 385000) "rocklog-vlic/" "rocklog-images-2/" "apache-drill/" "lambdaroyal-ws-printing-server/" "linode-s3-test/" "mongodb-test/" "rocklog_restructure_image/" "libs/" "rocklog-vlic-docker/" "lambdaroyal-memory/" "test-printing-server/" "clojure-repos/" ".DS_Store" "lambdaroyal-home/" "lambdaroyal-dispatch/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/src/lambdaroyal/vlic/domain/" (24797 30430 548841 980000) "search.clj" "testdata.clj" "picking_strategy_utils.clj" "printing.clj" "stock_action_inbound.clj" "jobs/" "stock_action_outbound.clj" "distribute_stocks_to_orders.clj" "stateful_card_watchdog.clj" "cerberus/" "order.clj" "publiclink.clj" "history/" "rematerialize_stock.clj" "kanban.clj" "stock_action.clj" "stock_order.clj" "xfer.clj" "inbound_helper.clj" "stock_action_transfer.clj" "card.clj" "rule/" "cerberus.clj" "inbound.clj" "picking.clj" "stock_action_inventory.clj" "cardaction_create_distribution_stock_order.clj" "order_helper.clj" "article_parts_list.clj" "purchase_order.clj" "stock_split.clj" "stock_action_manufacturing.clj" "location.clj" "picking_strategy.clj" "publicdata.clj" "printing_numberranges.clj" "unrelated_stock_operation.clj" "stats.clj" "order_confirmation.clj" "mobile_search.clj" "stream_processing_logic.clj" "testdata_demo.clj" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/src/lambdaroyal/vlic/" (24775 1 763475 863000) "system.clj" "domain/" "main.clj" "crosscutting/" "test/" "ioc.clj" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/src/lambdaroyal/memory/" (24598 55597 515058 331000) "abstraction/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/src/lambdaroyal/" (24598 55597 518573 900000) "thirdparty/" "vlic/" "memory/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/src/" (24598 55597 514834 66000) "lambdaroyal/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/lambdaroyal/memory/abstraction/" (24598 55597 634840 277000) "test_planseach_matchers.clj" "test_plansearch_comparators.clj" "test_reverse_plansearch.clj" "test_plansearch.clj" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/lambdaroyal/memory/" (24598 55597 633325 853000) "abstraction/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/lambdaroyal/vlic/" (24598 55597 647327 567000) "domain/" "crosscutting/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/lambdaroyal/vlic/crosscutting/" (24798 58830 512898 236000) "test_job_dispatch.clj" "test_send_data_to_internal_proxy.clj" "test_search.clj" "test_runtime_namespace.clj" "test_mongodb_rampup.clj" "test_cardimport.clj" "test_data_filter.clj" "test_migration_mongodb.clj" "test_playgorund.clj" "timing.clj" "test_numberrange.clj" "test_vlic_rule.clj" "test_datastructures.clj" "test_user.clj" "test_runtime_xslt.clj" "test_cardmeta.clj" "test_async.clj" "system_stub.clj" "plot.clj" "interface/" "test_onlinestats.clj" "test_rest_interface.clj" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/lambdaroyal/" (24598 55597 635117 58000) "vlic/" "memory/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/rocklog-vlic/test/" (24598 55597 654843 409000) "stats/" "lambdaroyal/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/lambdaroyal/memory/abstraction/" (24730 8657 85370 200000) "search.clj" "hierarchie.clj" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/" (24730 8657 84847 684000) "lambdaroyal/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/lambdaroyal/" (24730 8657 84912 911000) "memory/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/rocklog/lambdaroyal-memory/src/lambdaroyal/memory/" (24797 28532 223924 835000) "eviction/" "migration/" "core.clj" "helper.clj" "core/" "abstraction/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/clojure/emacs-test/src/" (24800 37092 764340 240000) "emacs_test/" "../" "./")
+
+ ("/Users/farisroslan/Desktop/clojure/emacs-test/src/emacs_test/" (24800 37699 48668 293000) "core.clj" "../" "./")
+
+ ("/Users/farisroslan/Desktop/clojure/emacs-test/" (24800 37155 776290 994000) "src/" "doc/" ".gitignore" "README.md" ".nrepl-port" "resources/" ".hgignore" "target/" "CHANGELOG.md" "test/" "LICENSE" "project.clj" "../" "./")
+)
+
+;; ----- ido-unc-hosts-cache -----
+t
