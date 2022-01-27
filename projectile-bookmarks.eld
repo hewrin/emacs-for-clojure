@@ -1,1 +1,1 @@
-("~/Desktop/rocklog/lambdaroyal-memory/" "~/Desktop/rocklog/rocklog-vlic/" "~/Desktop/clojure/emacs-test/")
+("~/Desktop/rocklog/rocklog-vlic/" "~/Desktop/projects/red-alert-prototype/" "~/Desktop/projects/clojure-web-development-book/guestbook/" "~/Desktop/projects/clojure-web-development-book/http-templating/" "~/Desktop/rocklog/lambdaroyal-memory/" "~/Desktop/projects/clj-call-graph/" "~/Desktop/projects/clj-dependency-graph/" "~/.emacs.d/" "~/Desktop/projects/morpheus/" "~/Desktop/rocklog/lambdaroyal-docker/" "~/Desktop/clojure/emacs-test/")

@@ -1,0 +1,481 @@
+/**
+ * PLANET-ROCKLOG VERSION, this gets set by make unversion and make tag
+ */
+var vlicVersion='21.01-SNAPSHOT-20220107-1319';
+
+/**
+ * PLANET-ROCKLOG GIT BRANCH, this gets set by make unversion and make tag
+ */
+var vlicBranch='20211006_dispatch_job_prototype';
+
+/**
+ * Fast String Buffer that avoid garbaging lots of immutable objects. comparable
+ * to the StringBuffer of the java universe
+ *
+ * @class
+ * @returns {StringBuffer}
+ */
+var LRStringBuffer = function() {
+  this.buffer = [];
+};
+
+/**
+ * Adds a string to the string buffer
+ *
+ * @param string
+ * @function
+ */
+LRStringBuffer.prototype.append = function(string) {
+  this.buffer.push(string);
+  return this;
+};
+
+/**
+ * Gives back the buffer content as a single string
+ *
+ * @function
+ */
+LRStringBuffer.prototype.toString = function() {
+  return this.buffer.join("");
+};
+
+function isNotNil(val) {
+  return val !== null && val !== undefined
+}
+
+function isUst(val) {
+  return Array.isArray(val) && val.length === 2;
+}
+
+function isValidUst(val) {
+  return isNotNil(val) && isUst(val) && isNotNil(val[0])
+}
+
+function isNonExistingUst(val) {
+  return isNotNil(val) && isUst(val) && !isNotNil(val[0])
+}
+
+
+function idFromUst(val) {
+  return isUst(val) ? val[0] : val;
+}
+
+function valueFromUstReference(val) {
+  return isUst(val) ? val[1] : val;
+}
+
+
+function ust2obj(ust) {
+
+  if (!Array.isArray(ust) || ust.length !== 2) {
+    return ust;
+  }
+
+  let result = Object.assign({}, ust[1]);
+  result.id = ust[0];
+
+  return result;
+}
+
+function emptyUst(template) {
+  return [undefined, objects.merge(template || {}, {vlicUnique: "C-" + ccc.makeId(10), vlicClientSideGenerated: true})];
+}
+
+/**
+ * @param {*[]} usts
+ *
+ * @return {*}
+ */
+function usts2map(usts) {
+
+  return usts
+    .filter((it) => isUst(it))
+    .reduce((acc, x) =>  { acc[x[0]] = x[1]; return acc; }, {});
+}
+
+enumerator = function(store) {
+  var prop = function() {
+    if(arguments.length) {
+      store = arguments[0];
+    } else {
+      store = store + 1;
+    }
+    return store;
+  }
+  return prop;
+};
+
+function precisionRound(number, precision) {
+  if(number === undefined || number === null) {
+    return number;
+  }
+  var factor = Math.pow(10, precision !== undefined ? precision : 3);
+  return Math.round(number * factor) / factor;
+}
+
+function roundForUi(number, precision = 2) {
+  return isNotNil(number) ? number.toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision}) : "";
+}
+
+propWithCallback = function(store, fn) {
+  var prop = function() {
+    if (arguments.length) {
+      var old = store;
+      store = arguments[0];
+      if(fn) {
+        fn(store, old, arguments.length > 1 ? arguments[1] : undefined);
+      }
+    }
+    return store;
+  };
+
+  return prop;
+}
+
+
+//applies only the last call to lambda that occured within a interval of time [threshhold] in ms, or the first one if no one occured before, default threshold is 250ms, yields a function.
+function throttle(fn, threshhold) {
+  threshhold || (threshhold = 250);
+
+  var last, deferTimer;
+  return function () {
+    var now = +new Date,
+        args = arguments;
+    if (last && now < last + threshhold) {
+      // hold on to it
+      clearTimeout(deferTimer);
+      deferTimer = setTimeout(function () {
+        last = now;
+        fn.apply(this, args);
+      }, threshhold);
+    } else {
+      last = now;
+      fn.apply(this, args);
+    }
+  };
+}
+
+//applies only the last call to lambda that occured within a interval of time [threshhold] in ms, or the first one if no one occured before, default threshold is 250ms, yields an object that provides the function get() that can be called on unthrottled events as well as a function flush() that immediately executes a pending event (if any) and returns true iff there was a pending event
+function throttleWrap(fn, threshhold) {
+  threshhold || (threshhold = 250);
+
+  var last, deferTimer, lastArgs;
+
+  var get = function() {
+    var now = +new Date,
+        lastArgs = (args = arguments);
+    if (last && now < last + threshhold) {
+      // hold on to it
+      clearTimeout(deferTimer);
+      lastArgs = args;
+      deferTimer = setTimeout(function () {
+        last = now;
+        fn.apply(this, args);
+      }, threshhold);
+    } else {
+      last = now;
+      fn.apply(this, args);
+    }
+  };
+
+  var flush = function() {
+    var now = +new Date;
+    if(last && now < last + threshhold) {
+      clearTimeout(deferTimer);
+      last = now;
+      fn.apply(this, args);
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  var cancel = function() {
+    var now = +new Date;
+    if(last && now < last + threshhold) {
+      clearTimeout(deferTimer);
+      last = now;
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+
+  return {get: function() {return get}, flush: function() {return flush}, cancel: function() {return cancel}};
+}
+
+//sets the ui focus to an element given by id without mithril redraw
+var focus = focus || function(id) {
+  setTimeout(function() {
+    var div = document.getElementById(id);
+    if(div) {
+      div.focus();
+    }
+  }, 20)}
+
+//A simple way to optimize this is to use partial application to pre-bind a controller instance
+var submodule = submodule || function(module, args) {
+  return module.view.bind(this, new module.controller(args));
+}
+
+
+//check for ipad/iphone
+var isApfel = isApfel || navigator.userAgent.match(/iPad/i) != null || navigator.userAgent.match(/iPhone/i) != null;
+
+var docPath = function(node, path, attr, empty, pos) {
+  var pos = (pos || 0);
+
+  if(path === undefined || node === undefined || node[1] === undefined || !(typeof node[1] === "object")) {
+    return empty;
+  }
+
+  if(path.length == pos) {
+    return node[1][attr] !== undefined && node[1][attr] !== "" ? node[1][attr] : empty;
+  }
+
+  //get to the proper child
+  node = node[1][path[pos]];
+
+  if(node !== undefined) {
+    return docPath(node, path, attr, empty, pos + 1);
+  } else {
+    return empty;
+  }
+
+}
+
+var path = function(xs, x) {
+  for(i = 0; i < xs.length; i++) {
+    if(x === undefined) {
+      return undefined;
+    } else if(Array.isArray(x) && i < xs.length - 1) {
+      x = x[1][xs[i]];
+    } else if(Array.isArray(x) && i == xs.length - 1) {
+      x = x[1][xs[i]];
+      if(Array.isArray(x) && x.length > 0) {
+        return x[1];
+      } else {
+        return x;
+      }
+    } else {
+      return undefined;
+    }
+  }
+}
+
+var ppath = function() {
+  return path.bind(this, arguments);
+}
+
+var setAttrToPath = function(node, path, attr, value, pos) {
+  var pos = (pos || 0);
+  if(node === undefined || node[1] === undefined || !(typeof node[1] === "object")) {
+    return;
+  }
+
+  if(path.length == pos) {
+    node[1][attr] = value;
+    return;
+  }
+
+  //get to the proper child
+  node = node[1][path[pos]];
+
+  if(node !== undefined) {
+    setAttrToPath(node, path, attr, value, pos + 1);
+  }
+
+}
+//given a lambdamemory tupel data path consisting of path elements [path] and an attribute [attr] returns a string representation for easy mapping
+var pathToString = function(path, args) {
+  return path.reduce(function(acc, i) {
+    return acc.append("/").append(i);
+  }, new LRStringBuffer()).append("[").append(args).append("]").toString();
+}
+
+/**
+ * traverses a data hierarchie by path [prefix], which is a seq of tupels where first elem is topology name and second is topology element value
+ */
+var hierarchieDfs =  function(data, prefix) {
+  if(!data) {
+    return undefined;
+  }
+  if(!prefix || prefix.length === 0) {
+    return data;
+  }
+  var xs = data.filter(function(x) {
+    return x.k && x.k === prefix[0][1];
+  });
+  var x = xs.length > 0 ? xs[0] : undefined;
+
+  if(x) {
+    var prefix = prefix.slice(1);
+    if(prefix.length > 0) {
+      return hierarchieDfs(x.v, prefix);
+    } else {
+      return x;
+    }
+  }
+
+  return undefined;
+}
+/**
+ * credit goes to http://stackoverflow.com/users/166491/mic
+ */
+function writeCookie(name,value,days) {
+  var date, expires;
+  if (days) {
+    date = new Date();
+    date.setTime(date.getTime()+(days*24*60*60*1000));
+    expires = "; expires=" + date.toGMTString();
+  }else{
+    expires = "";
+  }
+  document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function readCookie(name) {
+  var i, c, ca, nameEQ = name + "=";
+  ca = document.cookie.split(';');
+  for(i=0;i < ca.length;i++) {
+    c = ca[i];
+    while (c.charAt(0)==' ') {
+      c = c.substring(1,c.length);
+    }
+    if (c.indexOf(nameEQ) == 0) {
+      return c.substring(nameEQ.length,c.length);
+    }
+  }
+  return '';
+}
+
+function getVlicCookieName(name) {
+  const userId = window.auth ? auth.getUserId() : "undefined";
+  return `vlic.${ccc.prefixFromHref()}.user-${userId}.${name}`
+}
+
+//writes a cookie that is specific for this system given by the url prefix
+function writeVlicCookie(name, value, days) {
+  writeCookie(getVlicCookieName(name), value, days);
+}
+
+function readVlicCookie(name) {
+  return readCookie(getVlicCookieName(name));
+}
+
+function deleteCookie( name ) {
+  writeCookie(name,"", -1);
+  //document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+function deleteVlicCookie( name ) {
+  writeCookie(getVlicCookieName(name),"", -1);
+  //document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+
+function validateEmail(email) {
+  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+// add get week prototype functions
+// weeks always start from monday to sunday
+// january 4th is always in the first week of the year
+Date.prototype.getWeek = function () {
+    year = this.getFullYear();
+    var currentDotw = this.getWeekDay();
+    if (this.getMonth() == 11 && this.getDate() - currentDotw > 28) {
+        // if true, the week is part of next year
+        return this.getWeekForYear(year + 1);
+    }
+    if (this.getMonth() == 0 && this.getDate() + 6 - currentDotw < 4) {
+        // if true, the week is part of previous year
+        return this.getWeekForYear(year - 1);
+    }
+    return this.getWeekForYear(year);
+}
+
+// returns a zero based day, where monday = 0
+// all weeks start with monday
+Date.prototype.getWeekDay = function () {
+    return  (this.getDay() + 6) % 7;
+}
+
+// corrected for summer/winter time
+Date.prototype.getWeekForYear = function (year) {
+    var currentDotw = this.getWeekDay();
+    var fourjan = new Date(year, 0, 4);
+    var firstDotw = fourjan.getWeekDay();
+    var dayTotal = this.getDaysDifferenceCorrected(fourjan) // the difference in days between the two dates.
+    // correct for the days of the week
+    dayTotal += firstDotw; // the difference between the current date and the first monday of the first week,
+    dayTotal -= currentDotw; // the difference between the first monday and the current week's monday
+    // day total should be a multiple of 7 now
+    var weeknumber = dayTotal / 7 + 1; // add one since it gives a zero based week number.
+    return weeknumber;
+}
+
+// corrected for timezones and offset
+Date.prototype.getDaysDifferenceCorrected = function (other) {
+    var millisecondsDifference = (this - other);
+    // correct for offset difference. offsets are in minutes, the difference is in milliseconds
+    millisecondsDifference += (other.getTimezoneOffset()- this.getTimezoneOffset()) * 60000;
+    // return day total. 1 day is 86400000 milliseconds, floor the value to return only full days
+    return Math.floor(millisecondsDifference / 86400000);
+}
+
+document.addCssRule = document.addCssRule || function(mediaQuery, selectorText, cssText) {
+  var buf = new LRStringBuffer();
+  if(mediaQuery) {
+    buf.append("@media ").append(mediaQuery).append("{");
+  }
+  buf.append(selectorText).append("{").append(cssText).append("}");
+  if(mediaQuery) {
+    buf.append("}");
+  }
+  document.querySelector('style').textContent += buf.append("\n").toString();
+}
+
+//credit goes to stackoverflow itself
+String.prototype.formatUnicorn = String.prototype.formatUnicorn ||
+function () {
+    "use strict";
+    var str = this.toString();
+    if (arguments.length) {
+        var t = typeof arguments[0];
+        var key;
+        var args = ("string" === t || "number" === t) ?
+            Array.prototype.slice.call(arguments)
+            : arguments[0];
+
+        for (key in args) {
+            str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
+        }
+    }
+
+    return str;
+};
+
+String.isEmpty = String.isEmpty || function(n) {
+  return n === undefined || n === null || n === "";
+}
+
+String.prototype.clip = String.prototype.clip || function(n) {
+  "use strict";
+  var str = this.toString();
+  if(str.length > n) {
+    return str.substring(0,n) + "..";
+  } else {
+    return str;
+  }
+}
+
+/**
+ * credits to https://gist.github.com/hyamamoto/fd435505d29ebfa3d9716fd2be8d42f0
+ */
+function hashCode(str) {
+  return Array.from(str)
+    .reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0)
+}

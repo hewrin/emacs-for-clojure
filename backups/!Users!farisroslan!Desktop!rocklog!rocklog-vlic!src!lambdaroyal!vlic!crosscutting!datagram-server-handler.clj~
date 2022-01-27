@@ -1,0 +1,77 @@
+(ns ^{:doc "Sends out messages to an internal proxy, messages are sent to a job network. A job is spawand and we wait for the results"} lambdaroyal.vlic.crosscutting.datagram-server-handler
+  (:require [lambdaroyal.memory.core.tx :as tx]
+            [lambdaroyal.vlic.crosscutting.tx-decorator :as tx']
+            [lambdaroyal.memory.abstraction.search :as search]
+            [clojure.spec.alpha :as spec]
+            [lambdaroyal.memory.helper :refer :all]
+            [lambdaroyal.vlic.crosscutting.interface.file-export]
+            [lambdaroyal.vlic.crosscutting.vlic-rule :as vlic-rule]
+            [lambdaroyal.vlic.crosscutting.datastructures :refer :all]
+            [lambdaroyal.vlic.crosscutting.runtime-namespace :as rn]
+            [lambdaroyal.vlic.ioc :refer :all]
+            [lambdaroyal.vlic.crosscutting.boundary :as boundary]
+            [clojure.tools.logging :as log]
+            [clojure.core.async :as async]
+            [lambdaroyal.vlic.crosscutting.job-dispatch :refer [dispatch]]))
+
+;; --------------------------------------------------------------------
+;; DOMAIN LOGIC
+;; --------------------------------------------------------------------
+
+;; --------------------------------------------------------------------
+;; END OF - DOMAIN LOGIC
+;; --------------------------------------------------------------------
+
+
+;; --------------------------------------------------------------------
+;; GLUE CODE
+;; --------------------------------------------------------------------
+
+(def verbose (atom true))
+
+(defn call-internal-endpoint' [tx request]
+  {:pre [(bound? #'*system*) (map? request)]}
+  (let [{card-versioned :card-versioned} (check-map (tune-map request) :card-versioned)
+        mas-internal-proxy-endpoint (first (lambdaroyal.vlic.crosscutting.boundary/check-versioned-cards tx :mas-internal-proxy-endpoint [card-versioned]))]
+    (if @verbose (println :mas-internal-proxy-endpoint mas-internal-proxy-endpoint))
+    (with-tx *system*
+      (dispatch *system* {:es (System/currentTimeMillis)
+                          :key1 1
+                          :ns (str 'lambdaroyal.vlic.domain.jobs.call-internal-proxy-endpoint-job)
+                          :mas-internal-proxy-endpoint mas-internal-proxy-endpoint})
+      mas-internal-proxy-endpoint)))
+
+(defn ws-handler [tx request]
+  (io!
+   (log/info :request request)
+   (with-tx *system*
+     (try
+       (let [{:keys [uid code response response-content-type]} (check-map (tune-map request) :uid :code :response :response-content-type)
+             channel (or (get (-> *system* :internal-proxy-response-channels deref) uid) (throw (IllegalArgumentException. (format "No channel for uid %s" uid))))]
+
+         (log/info (format "got response code [%s] uid [%s] response [%s]" code uid response))
+         (async/>!! channel {:code code :lru-response response :response-content-type response-content-type}))
+       (catch Throwable e
+         (log/error e))))))
+;; -------------------------------------------c
+;; -------------------------
+;; END - GLUE CODE
+;; --------------------------------------------------------------------
+
+;; --------------------------------------------------------------------
+;; SYSTEM CONTRIBUTOR CONTRACT
+;; Add the following attributes to the system
+;; cardSearchClients - (atom {}) denotes the channels to clients
+;; that have open websocket connection for searching cards
+;; --------------------------------------------------------------------
+
+(defn contrib-start [system]
+  system)
+
+(defn contrib-post-start [system]
+  (do
+    (lambdaroyal.vlic.crosscutting.boundary/register-websocket-handler system 'lambdaroyal.vlic.crosscutting.datagram-server-handler :datagram-server-handler true :autodecorate false)))
+
+;; --------------------------------------------------------------------
+;; END - SYSTEM CONTRIBUTOR CONTRACT
+;; --------------------------------------------------------------------

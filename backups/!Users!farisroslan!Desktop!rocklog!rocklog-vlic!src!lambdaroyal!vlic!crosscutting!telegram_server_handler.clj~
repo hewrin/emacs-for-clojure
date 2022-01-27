@@ -1,0 +1,90 @@
+(ns ^{:doc "Sends out messages to an internal proxy, messages are sent to a job network. A job is spawand and we wait for the results"} lambdaroyal.vlic.crosscutting.telegram-server-handler
+  (:require [lambdaroyal.memory.core.tx :as tx]
+            [lambdaroyal.vlic.crosscutting.tx-decorator :as tx']
+            [lambdaroyal.memory.abstraction.search :as search]
+            [clojure.spec.alpha :as spec]
+            [lambdaroyal.memory.helper :refer :all]
+            [lambdaroyal.vlic.crosscutting.interface.file-export]
+            [lambdaroyal.vlic.crosscutting.vlic-rule :as vlic-rule]
+            [lambdaroyal.vlic.crosscutting.datastructures :refer :all]
+            [lambdaroyal.vlic.crosscutting.runtime-namespace :as rn]
+            [lambdaroyal.vlic.ioc :refer :all]
+            [lambdaroyal.vlic.crosscutting.boundary :as boundary]
+            [clojure.tools.logging :as log]
+            [clojure.core.async :as async]
+            [lambdaroyal.vlic.crosscutting.job-dispatch :refer [dispatch]]
+            [lambdaroyal.vlic.crosscutting.autobahn :as ab]))
+
+;; --------------------------------------------------------------------
+;; DOMAIN LOGIC
+;; --------------------------------------------------------------------
+
+;; --------------------------------------------------------------------
+;; END OF - DOMAIN LOGIC
+;; --------------------------------------------------------------------
+
+
+;; --------------------------------------------------------------------
+;; GLUE CODE
+;; --------------------------------------------------------------------
+
+(def verbose (atom true))
+
+(defn telegram-request
+  "this service is to be used by printing servers that want to send telegram requests"
+  [tx request]
+  {:pre [(bound? #'*system*) (map? request)]}
+  (io!
+   (let [session-id ab/*sessionId*
+         {jwt :jwt base64-telegram-data :base64-telegram-data server :server } (check-map (tune-map request) :jwt :base64-telegram-data)
+         ! (or (user/verify-jwt *system* jwt) (throw (IllegalArgumentException. "JWT is invalid")))
+         ident (or server jwt)
+         telegram-data (base64-to-byte-array base64-telegram-data)
+         payload {:session-id session-id :server server :telegram-data telegram-data}
+         io-telegram-handler (with-tx (->> (tx/select *tx* :io-telegram-handler)
+                                           (filter #(= ident (-> % last :ident)))
+                                           last))
+         lambda (rn/resolve-lambda io-telegram-handler :code 'handle-telegram)
+         result (lambda *system* io-telegram-handler  payload)
+         base64-response (atob result)
+         response (assoc payload :response base64-response)
+         ]
+     
+     (ab/send-to-one response)
+     ;; get telegram handler with ident
+     ;; run resolve lambda and pass in code attribute from telegram handler
+     ;; get response (encode in base64)
+     ;; use send-to-one to return response to printing server
+     
+     )))
+
+;;(defn handle-telegram [system io-telegram-handler {:keys [session-id server telegram-data]}] ...)
+
+;; -------------------------------------------c
+;; -------------------------
+;; END - GLUE CODE
+;; --------------------------------------------------------------------
+
+;; --------------------------------------------------------------------
+;; SYSTEM CONTRIBUTOR CONTRACT
+;; --------------------------------------------------------------------
+
+(defn contrib-start [system]
+  (assoc
+   system
+   (assoc (:meta-model system) :io-telegram-handler {})))
+
+(defn contrib-post-start [system]
+  (do
+    (lambdaroyal.vlic.crosscutting.boundary/register-websocket-handler system 'lambdaroyal.vlic.crosscutting.telegram-server-handler :telegram-server-handler true :autodecorate false)))
+
+;; --------------------------------------------------------------------
+;; END - SYSTEM CONTRIBUTOR CONTRACT
+;; --------------------------------------------------------------------
+
+
+
+
+
+
+

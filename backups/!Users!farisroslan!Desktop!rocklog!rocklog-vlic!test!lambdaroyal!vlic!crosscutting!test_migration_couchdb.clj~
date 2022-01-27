@@ -1,0 +1,73 @@
+(ns lambdaroyal.vlic.crosscutting.test-migration-couchb
+  (:require
+   [lambdaroyal.memory.helper :refer :all]
+   [lambdaroyal.memory.abstraction.search :refer :all]
+   [lambdaroyal.memory.eviction.mongodb :as evict-mongodb]
+   [lambdaroyal.memory.eviction.couchdb :as evict-couchdb]
+   [lambdaroyal.vlic.crosscutting.plot :refer :all]
+   [lambdaroyal.memory.core.tx :as tx]
+   [lambdaroyal.vlic.ioc :refer :all]
+   [midje.sweet :refer :all]
+   [lambdaroyal.vlic.system :as s]
+   [clojure.string :refer :all]
+   [lambdaroyal.memory.migration.core :as mig]
+   [monger.core :as mg]
+   [monger.db :as db]
+   [clojure.java.io :as io]
+   [com.ashafa.clutch :as clutch])
+  (:import [java.text SimpleDateFormat])
+  (:gen-class))
+
+(def mongodb-dbname "testMigration")
+
+(reset! evict-mongodb/verbose true)
+
+(defn delete-directory-recursive
+  "Recursively delete a directory."
+  [files]
+ (doseq [file-in-dir files]
+    (io/delete-file file-in-dir)))
+
+
+(defn drop-mongodb-database [db-name]
+  (let [url (evict-mongodb/get-database-url (System/getProperty "mongodb_preurl") (System/getProperty "mongodb_username") (System/getProperty "mongodb_password") (System/getProperty "mongodb_posturl"))
+        conn (mg/connect-via-uri url)
+        db (mg/get-db (conn :conn) db-name)]
+    (db/drop-db db)))
+
+(let [start-time (System/currentTimeMillis)
+      _ (System/setProperty "mongodb-dbname" mongodb-dbname)
+      ;;_ (drop-mongodb-database mongodb-dbname)
+      file-lists (.listFiles (io/file (System/getProperty "java.io.tmpdir") "vlic/wal"))
+      _  (if-not (empty? file-lists) (delete-directory-recursive file-lists))
+      colls (clutch/all-databases "http://localhost:5984")
+      _ (doseq [coll colls]
+          (clutch/delete-database (evict-couchdb/get-database-url "http://localhost:5984" (name coll))))
+      s (assoc (s/system) :evictor-type "mongodb" :db-name mongodb-dbname)
+      s (assoc s
+               :namespaces (remove #(contains? #{'lambdaroyal.vlic.crosscutting.httpserver} %) (:namespaces s)))
+      s (s/start s)
+      run (atom true)]
+  (while @run
+    (let [file-lists (.listFiles (io/file (System/getProperty "java.io.tmpdir") "vlic/wal"))]
+      (if (empty? file-lists)
+        (do (reset! run false)
+            (s/stop s)
+            (println "stopped")))))
+  (do
+    (println "Start CouchDB")
+    (reset! run true)
+    (try
+      (with-tx s
+        (let [_ (println :count-keys (count (-> s :ctx deref keys)))
+              state (mig/migrate-to-couchDB (-> s :ctx)  "http://localhost:5984")
+              _ (println :state state)]
+          (while (not (:finished @state))
+            (do (Thread/sleep 3000)
+                (println :state @state)
+                (println :collections-done (:collections-done @state))))
+          (let [total-time (- (System/currentTimeMillis) start-time)
+                _ (println total-time)])))
+      (finally
+        (do
+          (println :stop))))))

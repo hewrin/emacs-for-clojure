@@ -2,7 +2,375 @@
 ;; Automatically written history of CIDER REPL session
 ;; Edit at your own risk
 
-("(reset! state (update @state :finished not))" "(reset! (update @state :finished not))" "(update @state :finished not)" "(update @state :finished (true))" "(def state (atom {:coll [] :finished true}))" "(update @state :finished not)" "(update @state :finished (true))" "(update @state :finished true)" "(reset! state (update @state :coll conj \"World\"))" "(reset! state (update @state :coll conj \"Hello\"))" "(def state (atom {:coll [] :finished true}))" "state" "(swap! state (update @state :coll conj \"Hello\"))" "(update @state :coll conj \"Hello\")" "(update state :coll conj \"Hello\")" "(def state (atom {:coll [] :finished true}))" "(conj (:coll @state) \"Hello\")" "(update state :coll #(conj (:coll @state) \"Hello\"))" "(update-in state [:coll] #(conj (:coll @state) \"World\"))" "(update-in state [:coll] #(conj (:coll #state) \"World\"))" "(update-in state [:coll] #(conj (:coll #state) \"World\")))" "(update-in state [:coll] #(conj (:coll #state) \"World\"))" "(update-in state [:coll] assoc \"hello\")" "(update-in state [:coll] conj \"hello\")" "(update-in state [:coll] (conj \"hello\"))" "state" "(def state (atom {:coll [] :finished true}))" "state" "(reset! state {:coll (conj (:coll @state) \"World\")})" "(def state (atom {:coll [] :finished true}))" "(reset! state {:coll (conj (:coll @state) \"World\")})" "(conj (:coll @state) \"World\")" "@state" "(reset! state {:coll (conj (:coll @state) \"Hello\")})" "(def state (atom {:coll []}))" "state" "(:coll @state)" "(reset! state {:col (conj (:coll @state) \"Hello\")})" "(def state (atom {:coll []}))" "(conj [\"a\"] \"a\")" "(conj [] \"a\")" "(reset! state {:col (conj (:coll @state) \"World2\")})" "(reset! state {:col (conj (:coll @state) \"World\")})" "(def state (atom {:coll []}))" "(:coll @state)" "state" "(reset! state (conj (:coll @state) \"World\"))" "state" "(reset! state (conj (:coll @state) \"Hello\"))" "(def state (atom {:coll []}))" "(update @state :coll conj \"hello\")" "(update state :coll #(conj (:coll %) \"hello\"))" "(update state :coll #(conj (:coll state) \"hello\"))" "(update state :coll (conj (:coll state) \"hello\"))" "(def state (atom {:coll []}))" "state" "(swap! state assoc state (conj (:coll state) \"heelo\"))" "(swap! state assoc (conj (:coll state) \"heelo\"))" "(conj [] \"h\")" "(update state assoc (conj (:coll state) \"heelo\"))" "(update state assoc (:coll conj \"heelo\"))" "(update state assoc :coll conj \"heelo\")" "(def state (atom {:coll []}))" "(.peek queue)" " (with-tx
+("*e" "(select-first tx :tx-load-unit 8)" "(select-first tx :tx-load-unit \"8\")" "(select tx :tx-load-unit {:_id \"8\"})" "(select tx :tx-load-unit)" "(require '[lambdaroyal.memory.abstraction.search :as search]
+         '[lambdaroyal.memory.core.tx :refer :all]
+         '[lambdaroyal.vlic.domain.printing-numberranges :refer :all]
+         '[lambdaroyal.vlic.ioc :refer :all]
+         '[lambdaroyal.vlic.crosscutting.user :as u]
+         '[lambdaroyal.vlic.crosscutting.cardmeta :as cm]
+         '[lambdaroyal.vlic.crosscutting.plansearch :as ps])
+(def tx (create-tx (:ctx @lambdaroyal.vlic.main/system)))" "*e" "(take 1 [1,2,3])" "(take [1,2,3] 1)" "*e" "(loop [array ary
+       res []]
+  (let [current (first array)]
+    (if (some? (rest array))
+      (recur (rest array)
+             (conj res (first array)))
+      (println :res res))))" "*e" "(map #((+ %1 %2 %3)) [1 2 3 4 5 6])" "(map #(+ %1 %2 %3) [1 2 3 4 5 6])" "sum-of-attrs" "(map :source sum-of-attrs)" "(remove empty? (map :source sum-of-attrs))" "(remove empty? (map :source sum-of-attr))" "sum-of-attrs" "(map :source sum-of-attrs)" "(test-get-records sum-of-attrs)" "*e" "(get-records-that-need-updating sum-of-attrs)" "(first sum-of-attrs)" "(get-records-that-need-updating sum-of-attrs)" "sum-of-attrs" "(re-find #\"get|all|checkOrRaise|checkForMissingColls\" (-> (nth sum-of-attrs 2) first :source))" "(nth sum-of-attrs 2)" "(nth sum-of-attrs 1)" "(nth sum-of-attrs 0)" "(nth 2 sum-of-attrs)" "(last sum-of-attrs)" "( sum-of-attrs last)" "sum-of-attrs" "(-> sum-of-attrs first :source)" "(re-find #\"get|all|checkOrRaise|checkForMissingColls\" (-> sum-of-attrs first :source))" "(def sum-of-attrs (reduce conj attr attr2))" "(def attr2 (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs))
+
+
+
+
+
+
+
+
+
+" "(def attr (get-attributes :snapin))" "(-> sum-of-attrs first)" "(re-find #\"get|all|checkOrRaise|checkForMissingColls\" (-> sum-of-attrs first :source))" "(re-find #\"get(\\\\|all(\\\\|checkOrRaise(\\\\|checkForMissingColls(\\\\\" (-> sum-of-attrs first :source))" "(re-find #\"get|all|checkOrRaise|checkForMissingColls\" (-> sum-of-attrs first :source))" "(-> sum-of-attrs first :source)" "(get-records-that-need-updating sum-of-attrs)" "(defn get-records-that-need-updating [records]
+  (filter #(re-find #\"get|all|checkOrRaise|checkForMissingColls\" (-> % :source)) records))" "(defn get-records-that-need-updating [records]
+  (filter #(re-find #\"get(\\\\|all(\\\\\" (-> % :source)) records))" "(defn get-records-that-need-updating [records]
+  (filter #(re-find #\"get\"|\"all\" (-> % :source)) records))" "(defn get-records-that-need-updating [records]
+  (filter #(re-find #\"get\"|\"all\"|\"checkForMissingColls\"|\"checkOrRaise\") records))" "(re-find #\"bla2|bla\" (-> attr first :source))" "(defn get-records-that-need-updating [records]
+  (filter #(re-find #\"get\"|\"all\"| \"checkForMissingColls(\"| \"checkOrRaise(\") records))" "(defn get-records-that-need-updating [records]
+  (filter #(re-find #\"get(\"|\"all(\"| \"checkForMissingColls(\"| \"checkOrRaise(\") records))" "(defn get-records-that-need-updating [records]
+  (filter #(re-find #\"get(|all(|checkForMissingColls(|checkOrRaise\") records))" "sum-of-attrs" "(def sum-of-attrs (reduce conj attr attr2))" "(re-find #\"bla2|bla\" (-> attr first :source))" "(re-find #\"init|bla\" (-> attr first :source))" "(re-find #\"init\" (-> attr first :source))" "(-> attr first :source)" "(count attr2)" "(count attr)" "(count (reduce conj attr attr2))" "(reduce conj attr attr2)" "(type attr)" "(def attr (get-attributes :snapin))" "(defn get-attributes [datatype]
+  (let [system @lambdaroyal.vlic.main/system 
+        metadata-attributes (last
+                             (with-tx system (cm/cardmeta-cached nil datatype)))
+        relevant-attributes  (map (fn [x] (first x)) (filter #(and (not= (-> % last :sourcetype) nil)  (not= (-> % last :sourcetype) \"json\") (not= (-> % last :sourcetype) \"clojure\")) metadata-attributes))
+        relevant-records (for [attr relevant-attributes
+                               record (select tx  :snapin)
+                               :when (not= (-> record last attr) nil)]
+                           {:datatype datatype, :attribute attr, :record record :source (-> record last attr)})]
+    (into [] relevant-records)))" "(type attr2)" "(type attr)" "attr2" "(def attr2 (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs))
+
+
+
+
+
+
+
+
+
+" "attr" "(def attr (get-attributes :snapin))" "(defn get-attributes [datatype]
+  (let [system @lambdaroyal.vlic.main/system 
+        metadata-attributes (last
+                             (with-tx system (cm/cardmeta-cached nil datatype)))
+        relevant-attributes  (map (fn [x] (first x)) (filter #(and (not= (-> % last :sourcetype) nil)  (not= (-> % last :sourcetype) \"json\") (not= (-> % last :sourcetype) \"clojure\")) metadata-attributes))
+        relevant-records (for [attr relevant-attributes
+                               record (select tx  :snapin)
+                               :when (not= (-> record last attr) nil)]
+                           {:datatype datatype, :attribute attr, :record record :source (-> record last attr)})]
+    relevant-records))" "attr" "(def attr (get-attributes :snapin))" "(defn get-attributes [datatype]
+  
+  (let [system @lambdaroyal.vlic.main/system 
+        metadata-attributes (last
+                             (with-tx system (cm/cardmeta-cached nil datatype)))
+        relevant-attributes  (map (fn [x] (first x)) (filter #(and (not= (-> % last :sourcetype) nil)  (not= (-> % last :sourcetype) \"json\") (not= (-> % last :sourcetype) \"clojure\")) metadata-attributes))
+        relevant-records (for [attr relevant-attributes
+                               record (select *tx*  :snapin)
+                               :when (not= (-> record last attr) nil)]
+                           {:datatype datatype, :attribute attr, :record record :source (-> record last attr)})]
+    relevant-records))" "(def attr (get-attributes :snapin))" " (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs)
+
+
+
+
+
+
+
+
+
+" "(first (first (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs)))
+
+
+
+
+
+
+
+
+
+" "(first (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs))
+
+
+
+
+
+
+
+
+
+" " (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs)
+
+
+
+
+
+
+
+
+
+" "(defn get-snapin-nested-attributes [datatype attribute subattribute]
+  (let [system lambdaroyal.vlic.main/system
+        records (filter #(and (not= (-> % last attribute) nil) (not-empty (filter (fn [gOpt] (some? (-> gOpt subattribute))) (-> % last attribute)))) (select tx datatype))
+        records (map (fn [record] (map (fn [code] {:datatype datatype :attribute attribute :subattribute subattribute :record record :source (-> code subattribute)} )(filter (fn [gOpt] (some? (-> gOpt subattribute))) (-> record last attribute)))) records)]
+    (into [] records)))" " (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs)
+
+
+
+
+
+
+
+
+
+" "(first (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs))
+
+
+
+
+
+
+
+
+
+" "(get-snapin-nested-attributes :snapin :generalOptions :behaviourJs)
+
+
+
+
+
+
+
+
+
+" "(defn get-snapin-nested-attributes [datatype attribute subattribute]
+  (let [system lambdaroyal.vlic.main/system
+        records (filter #(and (not= (-> % last attribute) nil) (not-empty (filter (fn [gOpt] (some? (-> gOpt subattribute))) (-> % last attribute)))) (select tx datatype))
+        records (map (fn [record] (map (fn [code] {:datatype datatype :attribute attribute :subattribute subattribute :record record :source (-> code subattribute)} )(filter (fn [gOpt] (some? (-> gOpt subattribute))) (-> record last attribute)))) records)]
+    records))" "(vec (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs))
+
+
+
+
+
+
+
+
+
+" "(get-snapin-nested-attributes :snapin :generalOptions :behaviourJs)
+
+
+
+
+
+
+
+
+
+" "(defn get-snapin-nested-attributes [datatype attribute subattribute]
+  (let [system lambdaroyal.vlic.main/system
+        records (filter #(and (not= (-> % last attribute) nil) (not-empty (filter (fn [gOpt] (some? (-> gOpt subattribute))) (-> % last attribute)))) (select tx datatype))
+        records (map (fn [record] (map (fn [code] {:datatype datatype :attribute attribute :subattribute subattribute :record record :source (-> code subattribute)} )(filter (fn [gOpt] (some? (-> gOpt subattribute))) (-> record last attribute)))) records)]
+    (first records)))" "(get-snapin-nested-attributes :snapin :generalOptions :behaviourJs)
+
+
+
+
+
+
+
+
+
+" "(type (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs))
+
+
+
+
+
+
+
+
+
+" "(into [] (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs))
+
+
+
+
+
+
+
+
+
+" "(vector (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs))
+
+
+
+
+
+
+
+
+
+" "(vec '(get-snapin-nested-attributes :snapin :generalOptions :behaviourJs))
+
+
+
+
+
+
+
+
+
+" "(vec (get-snapin-nested-attributes :snapin :generalOptions :behaviourJs))
+
+
+
+
+
+
+
+
+
+" "(get-snapin-nested-attributes :snapin :generalOptions :behaviourJs)
+
+
+
+
+
+
+
+
+
+" "(defn get-snapin-nested-attributes [datatype attribute subattribute]
+  (let [system lambdaroyal.vlic.main/system
+        records (filter #(and (not= (-> % last attribute) nil) (not-empty (filter (fn [gOpt] (some? (-> gOpt subattribute))) (-> % last attribute)))) (select tx datatype))
+        records (map (fn [record] (map (fn [code] {:datatype datatype :attribute attribute :subattribute subattribute :record record :source (-> code subattribute)} )(filter (fn [gOpt] (some? (-> gOpt subattribute))) (-> record last attribute)))) records)]
+    records))" "(let [system lambdaroyal.vlic.main/system
+      relevant-attributes [:generalOptions]
+      relevant-subattributes [:behaviourJs]
+      records (filter #(and (not= (-> % last :generalOptions) nil) (not-empty (filter (fn [gOpt] (some? (-> gOpt :behaviourJs))) (-> % last :generalOptions)))) (select tx :snapin))
+      records (map (fn [record] (map (fn [code] {:datatype :snapin :attribute :generalOptions :subattribute :behaviourJs :record record :source (-> code :behaviourJs)} )(filter (fn [gOpt] (some? (-> gOpt :behaviourJs))) (-> record last :generalOptions)))) records)]
+  records)" "(let [system lambdaroyal.vlic.main/system
+      relevant-attributes [:generalOptions]
+      relevant-subattributes [:behaviourJs]
+      records (filter #(and (not= (-> % last :generalOptions) nil) (not-empty (filter (fn [gOpt] (some? (-> gOpt :behaviourJs))) (-> % last :generalOptions)))) (select tx :snapin))
+      records (map (fn [record] (map (fn [code] (println :code code))(filter (fn [gOpt] (some? (-> gOpt :behaviourJs))) (-> record last :generalOptions)))) records)]
+  records)" "(let [system lambdaroyal.vlic.main/system
+      relevant-attributes [:generalOptions]
+      relevant-subattributes [:behaviourJs]
+      records (filter #(and (not= (-> % last :generalOptions) nil) (not-empty (filter (fn [go] (some? (-> gOpt :behaviourJs))) (-> % last :generalOptions)))) (select tx :snapin))
+      records (map (fn [record] (map (fn [code] (println :code code))(filter (fn [gOpt] (some? (-> gOpt :behaviourJs))) (-> record last :generalOptions)))) records)]
+  records)" "(filter #(and (not= (-> % last  :generalOptions) nil) (not-empty (filter (fn [go] (some? (-> go :behaviourJs))) (-> % last :generalOptions)))) (with-tx @lambdaroyal.vlic.main/system (select tx :snapin)))" "(filter #(not= (-> % last  :generalOptions) nil ) (select tx  :snapin))" "(count (filter #(not= (-> % last  :generalOptions) nil ) (select tx  :snapin)))" "(select tx :snapin)" "(filter #(and (not= (-> % last  :generalOptions) nil) (not-empty (filter (fn [go] (some? (-> go :behaviourJs))) (-> % last :generalOptions)))) (with-tx @lambdaroyal.vlic.main/system (select tx :snapin)))" "(count (filter #(not= (-> % last  :generalOptions) nil ) (select tx  :snapin)))" "(count (filter #(= (-> % last  :generalOptions) nil ) (select tx  :snapin)))" "(count (filter #(= (-> % :generalOptions) nil ) (select tx  :snapin)))" "(filter #(not-empty (filter (fn [go] (some? (-> go :behaviourJs))) (-> % :generalOptions)))  (select tx :snapin))" "(filter #(not-empty (filter (fn [go] (some? (-> go :behaviourJs))) (-> % :generalOptions))) (with-tx system (select tx :snapin)))" "(filter #(not-empty (filter (fn [go] (some? (-> go :behaviourJs))) (-> % :generalOptions))) (with-tx system (tx/select *tx* :snapin)))" "(count (select tx :snapin))" "(count (filter #(= (-> % :generalOptions) nil ) (select tx  :snapin)))" "(filter #(= (-> % :generalOptions) nil ) (select tx  :snapin))" "(filter #(not (-> % :generalOptions) nil ) (select tx  :snapin))" "(filter #(not= (-> % :generalOptions) nil ) (select tx  :snapin))" "(filter #(not= (-> % :generalOptions) nil ) (with-tx system (select tx  :snapin)))" "(select tx :snapin)" "(filter #((not-empty (filter (fn [go] (some? (-> go :behaviourJs))) (-> % :generalOptions)))) xs)" "xs" "(def xs (filter #(= (first %)  \"Td9EgTtA2\")  (select tx :snapin)))" "(first (filter #(= (first %)  \"Td9EgTtA2\")  (select tx :snapin)))" "(filter #(= (first %)  \"Td9EgTtA2\")  (select tx :snapin))" "(require '[lambdaroyal.memory.abstraction.search :as search]
+         '[lambdaroyal.memory.core.tx :refer :all]
+         '[lambdaroyal.vlic.domain.printing-numberranges :refer :all]
+         '[lambdaroyal.vlic.ioc :refer :all]
+         '[lambdaroyal.vlic.crosscutting.user :as u]
+         '[lambdaroyal.vlic.crosscutting.cardmeta :as cm]
+         '[lambdaroyal.vlic.crosscutting.plansearch :as ps])
+(def tx (create-tx (:ctx @lambdaroyal.vlic.main/system)))" "[{:attr \"auto-finalization-datetime\", :type \"datetime-local\", :behaviourJs \"console.log(\\\"hello\\\")\\n\"} {:attr \"ident\", :type \"string\"}], :cardtype \"stock\", :vlicUnique \"Nydsb4e4v\", :vlicMru 1641274060591, :vlicCreationTs 1627267807905}]" "(= \"eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI3SUo5NURQUVlIQzUiLCJlbWFpbCI6Im11aGFtbWFkZmFyaXNAcm9ja2xvZy5jaCIsInNoYSI6ImNkN2E1MzliOWUwMzJhMzQ5ZDA5YTQyYTY4ZTY2MGQyNGE5ZTZjMzY3NWEwY2Y2MWFiZmJiMGY1MTc0MWZhYTYiLCJleHAiOjE2MzU5MTU2NjEsImlhdCI6MTYzNTgyOTI2MX0.MEUCIAKHsiP-AgcVjxBt80WMiLK6N8zJuLOygZibxkkKCTR2AiEA3iz_ZOiVq_L3ayglLCjsULiY5ggPRHAM_MeHwIupPJo\" \"eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI3SUo5NURQUVlIQzUiLCJlbWFpbCI6Im11aGFtbWFkZmFyaXNAcm9ja2xvZy5jaCIsInNoYSI6ImNkN2E1MzliOWUwMzJhMzQ5ZDA5YTQyYTY4ZTY2MGQyNGE5ZTZjMzY3NWEwY2Y2MWFiZmJiMGY1MTc0MWZhYTYiLCJleHAiOjE2MzU5MTU2NjEsImlhdCI6MTYzNTgyOTI2MX0.MEUCIAKHsiP-AgcVjxBt80WMiLK6N8zJuLOygZibxkkKCTR2AiEA3iz_ZOiVq_L3ayglLCjsULiY5ggPRHAM_MeHwIupPJo\")" "([\"asd\" \"asd\"] \"s\")" "([\"asd\" \"asd\"] 1)" "@lambdaroyal.vlic.crosscutting.session/most-recently-used-sessions" "@lambdaroyal.vlic.crosscutting.session/session-by-ots" "(-> lambdaroyal.vlic.main/system deref :session id)" "ots" "(dosync (alter ots assoc-in [\"first\" :name] \"second\"))" " (def ots (ref {\"first\" {:amount 2 :name \"first\"}}))" "@ots" "(dosync (alter ots assoc \"first\" (assoc first :name \"second\")))" "(alter ots assoc \"first\" (assoc first :name \"second\"))" "(def first {\"first\" {:amount 2 :name \"first\"}})" "@ots" "(def ots (ref {\"first\" {:amount 2 :name \"first\"}}))" "ots" "(def ots {\"first\" {:amount 2 :name \"first\"}})" "(require '[lambdaroyal.vlic.system :refer :all]
+         '[lambdaroyal.memory.abstraction.search :as search]
+         '[lambdaroyal.memory.core.tx :refer :all]
+         '[lambdaroyal.vlic.domain.printing-numberranges :refer :all]
+         '[lambdaroyal.vlic.ioc :refer :all]
+         '[lambdaroyal.vlic.domain.cerberus :as cerb]
+         '[lambdaroyal.vlic.domain.publicdata :as publicdata]
+         '[lambdaroyal.vlic.crosscutting.snapin :as snapin]
+         '[lambdaroyal.vlic.crosscutting.user :as u]
+         '[lambdaroyal.vlic.crosscutting.cardmeta :as cm]
+         '[lambdaroyal.vlic.crosscutting.plansearch :as ps]
+         '[lambdaroyal.vlic.domain.stats :as stats])
+(def tx (create-tx (:ctx s)))" "(merge {:a \"a\"} {:a \"b\"})" "(-> req :params :ots)" "(-> req :params)" "(def req {:params {:ots \"as\"}})" "(re-matches #\"/static/.+\\.html\" uri)" "(re-matches #\"/static/.+\\\\.html\" uri)" "(re-matches #\"/static/.+.html\" uri)" "(re-matches #\"/static/.+\" uri)" "(re-matches #\"/static/.+\\\\.html\" uri)" "(requires-auth uri)" "(def uri \"/static/index.mithril.html\")" "(defn- requires-auth [uri]
+  (let [uris [#\"/static/landing-page/.*\" #\"/static/pd/.*\" #\"/static/.+\\\\.html\" #\"/static/tabin/.*\"]]
+    (some #(re-matches % uri) uris)))" "(take 1 (select tx :stock-order))" "(take 1 (tx/select tx :stock-order))" "(require '[lambdaroyal.memory.abstraction.search :as search]
+         '[lambdaroyal.memory.core.tx :refer :all]
+         '[lambdaroyal.vlic.domain.printing-numberranges :refer :all]
+         '[lambdaroyal.vlic.ioc :refer :all]
+         '[lambdaroyal.vlic.crosscutting.user :as u]
+         '[lambdaroyal.vlic.crosscutting.cardmeta :as cm]
+         '[lambdaroyal.vlic.crosscutting.plansearch :as ps])
+(def tx (create-tx (:ctx @lambdaroyal.vlic.main/system)))" "(def subtemplate \" \\\\vspace{1.5mm}_ !id! & \\\\vspace{1.5mm} \\\\ !tree->amount!  & \\\\vspace{1.5mm} \\\\ !tree->ident!   \\\\vspace{1.5mm}\\\\\")" "(def test-data  {:vlicUser nil 
+                :purchase-taxes nil 
+                :tree [2749 {:amount 1, :vlicUser nil, :vlicCreatedBy nil, :vlicRev 0, :article 1, :coll :article, :bestBefore 20161014, :batch \"BDG257\", :vlicGtid 68908843203, :uom \"Kg\", :luType \"Bag\", :creation-date \"2021-07-30\", :ident 2749, :vlicKey 2749, :origAmount 1, :location 2817, :vlicUnique \"foYSHi3fq\", :vlicMru 1627627355940, :vlicCreationTs 1627627355940}]
+                :vlicCreatedBy nil
+                :unit \"\"
+                 :sales-taxes nil
+                 :vlicRev 0 
+                 :last-location \"\"
+                  :coll :article 
+                  :vlicUiTrim [2749 2749]
+                   :currency \"\"
+                    :vlicGtid 68908843203 
+                    :id 2749 
+                    :vlicTags [] 
+                    :ident 2749 
+                    :vlicUnique \"foYSHi3fq\" 
+                    :vlicMru \"2021-07-30 14:42:35\" 
+                    :vlicMruMs 1627627355940 
+                    :vlicCreationTs \"2021-07-30 14:42:35\"})" "(ns lambdaroyal.vlic.domain.printing)" "res" "(def res (latex-weave-in-data subtemplate test-data :quote-lates true))" "(def subtemplate \" \\\\vspace{1.5mm}_ !id! & \\\\vspace{1.5mm} \\\\ !tree->amount!  & \\\\vspace{1.5mm} \\\\ !tree->ident!   \\\\vspace{1.5mm}\\\\\")" "res" "(def res (latex-weave-in-data subtemplate test-data :quote-lates true))" "(def subtemplate \" \\\\vspace{1.5mm}_ !id! & \\\\vspace{1.5mm} \\\\ |!amount!  & \\\\vspace{1.5mm} \\\\ !tree->article->ident!   \\\\vspace{1.5mm}\\\\\")" "res" "(def res (latex-weave-in-data subtemplate test-data :quote-lates true))" "(latex-weave-in-data subtemplate test-data :quote-lates true)" "(def subtemplate \" \\\\vspace{1.5mm}_ !id! & \\\\vspace{1.5mm} \\\\ |amount!  & \\\\vspace{1.5mm} \\\\ !tree->article->ident!   \\\\vspace{1.5mm}\\\\\")" "(def test-data  {:vlicUser nil 
+                :purchase-taxes nil 
+                :tree [2749 {:amount 1, :vlicUser nil, :vlicCreatedBy nil, :vlicRev 0, :article 1, :coll :article, :bestBefore 20161014, :batch \"BDG257\", :vlicGtid 68908843203, :uom \"Kg\", :luType \"Bag\", :creation-date \"2021-07-30\", :ident 2749, :vlicKey 2749, :origAmount 1, :location 2817, :vlicUnique \"foYSHi3fq\", :vlicMru 1627627355940, :vlicCreationTs 1627627355940}]
+                :vlicCreatedBy nil
+                :unit \"\"
+                 :sales-taxes nil
+                 :vlicRev 0 
+                 :last-location \"\"
+                  :coll :article 
+                  :vlicUiTrim [2749 2749]
+                   :currency \"\"
+                    :vlicGtid 68908843203 
+                    :id 2749 
+                    :vlicTags [] 
+                    :ident 2749 
+                    :vlicUnique \"foYSHi3fq\" 
+                    :vlicMru \"2021-07-30 14:42:35\" 
+                    :vlicMruMs 1627627355940 
+                    :vlicCreationTs \"2021-07-30 14:42:35\"})" "(def test-data  {:vlicUser nil 
+                :purchase-taxes nil 
+                :tree [2749 {:amount 1, :vlicUser nil, :vlicCreatedBy nil, :vlicRev 0, :article 1, :coll :article, :bestBefore 20161014, :batch \"BDG257\", :vlicGtid 68908843203, :uom \"Kg\", :luType \"Bag\", :creation-date \"2021-07-30\", :ident 2749, :vlicKey 2749, :origAmount 1, :location 2817, :vlicUnique foYSHi3fq, :vlicMru 1627627355940, :vlicCreationTs 1627627355940}]
+                :vlicCreatedBy nil
+                :unit \"\"
+                 :sales-taxes nil
+                 :vlicRev 0 
+                 :last-location \"\"
+                  :coll :article 
+                  :vlicUiTrim [2749 2749]
+                   :currency \"\"
+                    :vlicGtid 68908843203 
+                    :id 2749 
+                    :vlicTags [] 
+                    :ident 2749 
+                    :vlicUnique \"foYSHi3fq\" 
+                    :vlicMru \"2021-07-30 14:42:35\" 
+                    :vlicMruMs 1627627355940 
+                    :vlicCreationTs \"2021-07-30 14:42:35\"})" "(def test-data  {:vlicUser nil 
+                :purchase-taxes nil 
+                :tree [2749 {:amount 1, :vlicUser nil, :vlicCreatedBy nil, :vlicRev 0, :article 1, :coll :article, :bestBefore 20161014, :batch \"BDG257\", :vlicGtid 68908843203, :uom Kg, :luType Bag, :creation-date \"2021-07-30\", :ident 2749, :vlicKey 2749, :origAmount 1, :location 2817, :vlicUnique foYSHi3fq, :vlicMru 1627627355940, :vlicCreationTs 1627627355940}]
+                :vlicCreatedBy nil
+                :unit \"\"
+                 :sales-taxes nil
+                 :vlicRev 0 
+                 :last-location \"\"
+                  :coll :article 
+                  :vlicUiTrim [2749 2749]
+                   :currency \"\"
+                    :vlicGtid 68908843203 
+                    :id 2749 
+                    :vlicTags [] 
+                    :ident 2749 
+                    :vlicUnique \"foYSHi3fq\" 
+                    :vlicMru \"2021-07-30 14:42:35\" 
+                    :vlicMruMs 1627627355940 
+                    :vlicCreationTs \"2021-07-30 14:42:35\"})" "(def test-data  {:vlicUser nil, :purchase-taxes , :tree [2749 {:amount 1, :vlicUser nil, :vlicCreatedBy nil, :vlicRev 0, :article 1, :coll :article, :bestBefore 20161014, :batch \"BDG257\", :vlicGtid 68908843203, :uom Kg, :luType Bag, :creation-date \"2021-07-30\", :ident 2749, :vlicKey 2749, :origAmount 1, :location 2817, :vlicUnique foYSHi3fq, :vlicMru 1627627355940, :vlicCreationTs 1627627355940}], :vlicCreatedBy nil, :unit , :sales-taxes , :vlicRev 0, :last-location , :coll :article, :vlicUiTrim [2749 2749], :currency , :vlicGtid 68908843203, :id 2749, :vlicTags [], :ident 2749, :vlicUnique foYSHi3fq, :vlicMru \"2021-07-30 14:42:35\", :vlicMruMs 1627627355940, :vlicCreationTs \"2021-07-30 14:42:35\"})" "(def test-data :data-in-subreports {:vlicUser nil, :purchase-taxes , :tree [2749 {:amount 1, :vlicUser nil, :vlicCreatedBy nil, :vlicRev 0, :article 1, :coll :article, :bestBefore 20161014, :batch \"BDG257\", :vlicGtid 68908843203, :uom Kg, :luType Bag, :creation-date \"2021-07-30\", :ident 2749, :vlicKey 2749, :origAmount 1, :location 2817, :vlicUnique foYSHi3fq, :vlicMru 1627627355940, :vlicCreationTs 1627627355940}], :vlicCreatedBy nil, :unit , :sales-taxes , :vlicRev 0, :last-location , :coll :article, :vlicUiTrim [2749 2749], :currency , :vlicGtid 68908843203, :id 2749, :vlicTags [], :ident 2749, :vlicUnique foYSHi3fq, :vlicMru \"2021-07-30 14:42:35\", :vlicMruMs 1627627355940, :vlicCreationTs \"2021-07-30 14:42:35\"})" "(def test-data :data-in-subreports {:vlicUser nil, :purchase-taxes , :tree [2749 {:amount 1, :vlicUser nil, :vlicCreatedBy nil, :vlicRev 0, :article 1, :coll :article, :bestBefore 20161014T000000.000Z, :batch BDG257, :vlicGtid 68908843203, :uom Kg, :luType Bag, :creation-date 2021-07-30, :ident 2749, :vlicKey 2749, :origAmount 1, :location 2817, :vlicUnique foYSHi3fq, :vlicMru 1627627355940, :vlicCreationTs 1627627355940}], :vlicCreatedBy nil, :unit , :sales-taxes , :vlicRev 0, :last-location , :coll :article, :vlicUiTrim [2749 2749], :currency , :vlicGtid 68908843203, :id 2749, :vlicTags [], :ident 2749, :vlicUnique foYSHi3fq, :vlicMru 2021-07-30 14:42:35, :vlicMruMs 1627627355940, :vlicCreationTs 2021-07-30 14:42:35})" "(ns lambdaroyal.vlic.domain.printing)" "u" "m" "(require '[lambdaroyal.vlic.main :as m]
+	'[lambdaroyal.vlic.system :refer :all]
+    '[lambdaroyal.memory.abstraction.search :as search]
+    '[lambdaroyal.memory.core.tx :refer :all]
+    '[lambdaroyal.vlic.domain.printing-numberranges :refer :all]
+    '[lambdaroyal.vlic.ioc :refer :all]
+    '[lambdaroyal.vlic.crosscutting.user :as u]
+    '[lambdaroyal.vlic.crosscutting.cardmeta :as cm]
+    '[lambdaroyal.vlic.crosscutting.plansearch :as ps])
+(def tx (create-tx (:ctx (deref m/system))))" "(reset! state (update @state :finished not))" "(reset! (update @state :finished not))" "(update @state :finished not)" "(update @state :finished (true))" "(def state (atom {:coll [] :finished true}))" "(update @state :finished not)" "(update @state :finished (true))" "(update @state :finished true)" "(reset! state (update @state :coll conj \"World\"))" "(reset! state (update @state :coll conj \"Hello\"))" "(def state (atom {:coll [] :finished true}))" "state" "(swap! state (update @state :coll conj \"Hello\"))" "(update @state :coll conj \"Hello\")" "(update state :coll conj \"Hello\")" "(def state (atom {:coll [] :finished true}))" "(conj (:coll @state) \"Hello\")" "(update state :coll #(conj (:coll @state) \"Hello\"))" "(update-in state [:coll] #(conj (:coll @state) \"World\"))" "(update-in state [:coll] #(conj (:coll #state) \"World\"))" "(update-in state [:coll] #(conj (:coll #state) \"World\")))" "(update-in state [:coll] #(conj (:coll #state) \"World\"))" "(update-in state [:coll] assoc \"hello\")" "(update-in state [:coll] conj \"hello\")" "(update-in state [:coll] (conj \"hello\"))" "state" "(def state (atom {:coll [] :finished true}))" "state" "(reset! state {:coll (conj (:coll @state) \"World\")})" "(def state (atom {:coll [] :finished true}))" "(reset! state {:coll (conj (:coll @state) \"World\")})" "(conj (:coll @state) \"World\")" "@state" "(reset! state {:coll (conj (:coll @state) \"Hello\")})" "(def state (atom {:coll []}))" "state" "(:coll @state)" "(reset! state {:col (conj (:coll @state) \"Hello\")})" "(def state (atom {:coll []}))" "(conj [\"a\"] \"a\")" "(conj [] \"a\")" "(reset! state {:col (conj (:coll @state) \"World2\")})" "(reset! state {:col (conj (:coll @state) \"World\")})" "(def state (atom {:coll []}))" "(:coll @state)" "state" "(reset! state (conj (:coll @state) \"World\"))" "state" "(reset! state (conj (:coll @state) \"Hello\"))" "(def state (atom {:coll []}))" "(update @state :coll conj \"hello\")" "(update state :coll #(conj (:coll %) \"hello\"))" "(update state :coll #(conj (:coll state) \"hello\"))" "(update state :coll (conj (:coll state) \"hello\"))" "(def state (atom {:coll []}))" "state" "(swap! state assoc state (conj (:coll state) \"heelo\"))" "(swap! state assoc (conj (:coll state) \"heelo\"))" "(conj [] \"h\")" "(update state assoc (conj (:coll state) \"heelo\"))" "(update state assoc (:coll conj \"heelo\"))" "(update state assoc :coll conj \"heelo\")" "(def state (atom {:coll []}))" "(.peek queue)" " (with-tx
    @lambdaroyal.vlic.main/system)" " (with-tx
    @lambdaroyal.vlic.main/system
    (dosync

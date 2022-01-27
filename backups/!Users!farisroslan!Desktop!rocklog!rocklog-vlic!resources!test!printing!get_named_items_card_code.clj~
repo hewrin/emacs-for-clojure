@@ -1,0 +1,28 @@
+(do
+  (require '[lambdaroyal.memory.core.tx :as tx]
+           '[lambdaroyal.vlic.ioc :refer :all]
+           '[lambdaroyal.vlic.crosscutting.datastructures :refer :all]
+           '[lambdaroyal.vlic.ioc :refer :all]
+           '[lambdaroyal.memory.abstraction.search :as search]
+           '[lambdaroyal.vlic.domain.printing :as printing])
+  (defn get-named-items [system labeltype collection card]   
+    (let [subtemplate1 "\\vspace{1.5mm} !pos! & \\vspace{1.5mm} !requirementId! & \\vspace{1.5mm} \\textbf{!equipmentGroup->name!} \\newline \\small{Inventar: !inventoryNumber!}\\newline &  \\vspace{1.5mm} !amount! \\vspace{1.5mm} &  \\vspace{1.5mm}\\\\"
+          xs1 (with-tx system
+                (reduce
+                 (fn [acc x]
+                   (conj acc (assoc x :pos (inc (count acc)))))
+                 []
+                 (sort-by (fn [x] [(-> x :equipmentGroup last :name) (-> x :requirementId)]) 
+                          (map last (map
+                                     #(tx/tree *tx* :stock-order-item % :use-attr-name true)
+                                     (search/proj *tx* 
+                                                  (filter-identity :stock-action-list card)
+                                                  (search/<<< :stock-order)
+                                                  (search/>>> :stock-order-item)))))))
+          subtemplate2 "\\vspace{1.5mm} !pos! & \\vspace{1.5mm} \\textbf{!equipmentGroup->name!} \\newline \\small{Inventar: !inventoryNumber!}\\newline &  \\vspace{1.5mm} !amount! \\vspace{1.5mm} &  \\vspace{1.5mm}\\\\"
+          xs2 (with-tx system
+                (pmap (partial printing/normalize-card-for-templating system :stock-order) (take 3 (tx/select *tx* :stock-order)))
+                )]
+      {:stock-order-item [xs1 subtemplate1] :stock-order [xs1 subtemplate1]}))
+  (comment (with-tx @lambdaroyal.vlic.main/system
+             (get-items *system* nil nil (tx/select-first *tx* :stock-action-list 31257)))))

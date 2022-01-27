@@ -1,0 +1,106 @@
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage[a4paper]{geometry}
+\geometry{a4paper,right=15mm,left=15mm, top=20mm}
+\geometry{verbose}
+\pagestyle{empty}
+\setcounter{secnumdepth}{-2}
+\setcounter{tocdepth}{-2}
+\setlength{\parindent}{0cm}
+\synctex=-1
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{longtable, tabu, xcolor}
+\usepackage[utf8]{inputenc}
+\inputencoding{utf8}
+\usepackage{numprint}
+\usepackage{babel}
+\usepackage{fancyhdr,lipsum, makecell}
+\renewcommand{\familydefault}{\sfdefault}
+\makeatletter
+\providecommand{\tabularnewline}{\\}
+
+\newcommand{\lyxaddress}[1]{
+	\par {\raggedright #1
+	\vspace{1.4em}
+	\noindent\par}
+}
+
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\setcounter{page}{1}
+\pagenumbering{arabic}}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\rhead{
+\includegraphics[width=2cm]{{../../images/image-tag-1626087014486.886351168}.png}
+}
+\fancyfoot[EL,OL]{
+\begin{tabular}[b]{l r}
+\textbf{Gottlob Brodbeck GmbH \& Co.KG} \footnotesize{| E-Mail: info@g-brodbeck.de | Telefon: +49 7123 963-0 | Webseite: www.g-brodbeck.de} & \\
+Seite \thepage\ &  \\
+\end{tabular}
+}
+
+\begin{document}
+\begin{spacing}{0}
+
+\lyxaddress{%
+\begin{tabular}{>{\raggedright}p{6cm}}
+\noalign{\vskip2cm}
+\textbf{\Large{}\textbf{Pickliste}}
+\end{tabular}}
+\end{spacing}
+
+\begin{tabular}{>{\raggedright}p{1.2cm}>{\raggedright}p{6.8cm}}
+\noalign{\vskip0.25cm}
+\textbf{\Medium{}Auftrag} & \textbf{\Medium{}\textbf{!card->tree->Auftragsnummer!}}\tabularnewline
+\end{tabular}
+
+\begin{tabular}{>{\raggedright}p{1.5cm}>{\raggedright}p{5cm}>{\raggedright}p{3.0cm}>{\raggedright}p{6.8cm}}
+\noalign{\vskip0.1cm}
+\multicolumn{4}{l}{}\tabularnewline
+\hline 
+\noalign{\vskip0.1cm}
+\multicolumn{4}{l}{}\tabularnewline
+KST-Nr.: & !card->costCenterNumber! \ & Zielbaustelle: & !card->targetLocation! \tabularnewline
+Datum: & \today & Auftragsbemerkung: & !card->tree->Bemerkung! 
+
+\noalign{\vskip0.1cm}
+\multicolumn{4}{l}{}\tabularnewline
+\hline 
+\noalign{\vskip0.1cm}
+\multicolumn{4}{l}{}\tabularnewline
+\noalign{\vskip0.1cm}
+\multicolumn{4}{l}{}\tabularnewline
+\end{tabular}
+
+
+\tabulinesep=2.3mm
+\begin{longtabu} to 1\linewidth [t] {X[0.66,l] X[1.5,l] X[3,l] X[0.5,l] X[r]}
+\nprounddigits{2}
+  \rowfont \textbf\hspace{0pt} Bestand & Ort & Artikel & \hspace{0pt} Menge & Korrektur\\
+  \tabucline [0.5pt]{-}  
+  \endhead
+  
+  \everyrow {\tabucline[0.2pt]{-}}
+!subs-stocks! 
+
+\end{longtabu}
+
+\tabulinesep=2.3mm
+\begin{longtabu} to 1\linewidth [t] {X[0.66,l] X[1.5,l] X[3,l] X[0.5,l] X[r]}
+\nprounddigits{2}
+  \rowfont \textbf\hspace{0pt} Bestand & Ort & Artikel & \hspace{0pt} Menge & Korrektur\\
+  \tabucline [0.5pt]{-}  
+  \endhead
+  
+  \everyrow {\tabucline[0.2pt]{-}}
+!subs-stocks2! 
+
+\end{longtabu}
+
+\end{document}

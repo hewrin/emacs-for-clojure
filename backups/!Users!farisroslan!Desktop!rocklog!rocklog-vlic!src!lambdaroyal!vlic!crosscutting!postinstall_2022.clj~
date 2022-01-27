@@ -1,0 +1,27 @@
+(ns ^{:doc "This namespace contains functions executed first in contrib-post-start phase - all functions created 2021"}
+    lambdaroyal.vlic.crosscutting.postinstall-2022
+  (:require [lambdaroyal.memory.core.tx :as tx]
+            [lambdaroyal.vlic.crosscutting.tx-decorator :as tx']
+            [lambdaroyal.memory.helper :refer :all]
+            [lambdaroyal.memory.core.context :refer :all]
+            [clojure.java.io :as io]
+            [lambdaroyal.vlic.ioc :refer :all]
+            [lambdaroyal.vlic.crosscutting.user :as user]
+            [lambdaroyal.vlic.crosscutting.postinstall :refer [custom-postinstall module-postinstall custom-postinstall-not-suitable execute-postinstall-batch create-new-collection create-dropdown-definition alter-attribute next-cardmeta-pos delete-attribute]]
+            [lambdaroyal.vlic.crosscutting.plansearch :refer [search-sync]]
+            [lambdaroyal.vlic.crosscutting.cardmeta :as cm]
+            [lambdaroyal.vlic.crosscutting.news :as news]
+            [lambdaroyal.vlic.crosscutting.datastructures :refer :all]
+            [lambdaroyal.vlic.crosscutting.cardmeta :refer [get-packing-unit-ratios set-field-indexed']]
+            [lambdaroyal.vlic.domain.publicdata :as publicdata]
+            [lambdaroyal.vlic.domain.printing :as printing]
+            [lambdaroyal.vlic.crosscutting.runtime-namespace :as rn]
+            [lambdaroyal.vlic.crosscutting.snapin :as snapin]
+            [clojure.tools.logging :as log])
+  (:gen-class))
+
+;; --------------------------------------------------------------------
+;; DOMAIN LOGIC
+;; --------------------------------------------------------------------
+
+

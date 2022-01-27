@@ -1,0 +1,127 @@
+(ns lambdaroyal.vlic.domain.test-undo-stock-deletion
+  (:require 
+   [lambdaroyal.memory.core.tx :as tx]
+   [lambdaroyal.memory.helper :refer :all]
+   [lambdaroyal.memory.abstraction.search :refer :all]
+   [lambdaroyal.vlic.crosscutting.boundary :as boundary]
+   [lambdaroyal.vlic.ioc :refer :all]
+   [midje.sweet :refer :all]
+   [lambdaroyal.vlic.system :as s]
+   [lambdaroyal.vlic.domain.order :as order]
+   [clojure.spec.alpha :as spec]
+   [clojure.spec.test.alpha :as stest]
+   [lambdaroyal.vlic.crosscutting.datastructures :refer [uid next-id traverse-path]]
+   [lambdaroyal.vlic.domain.inbound-helper :refer [find-target-locations]]
+   [lambdaroyal.vlic.crosscutting.runtime-namespace :as rn]
+   [lambdaroyal.vlic.crosscutting.plansearch :as ps]
+   [lambdaroyal.vlic.domain.stock-action :as stock-action]
+   [lambdaroyal.vlic.crosscutting.interface.fieldset :refer [filter-fn-comb filter-fn]]
+   [lambdaroyal.vlic.crosscutting.io-helper :refer :all]
+   [lambdaroyal.vlic.crosscutting.search]
+   [clojure.string :refer :all]
+   [clojure.java.io :as io]
+   [cheshire.core :as json]
+   [lambdaroyal.vlic.domain.order-confirmation :as oc])
+  (:gen-class))
+
+
+
+(defn finish-order [system order]
+  (with-tx system
+    (let [order-res (boundary/yield-tree (order/finish-order *tx* {:order-versioned order}) :stock-order false true)
+          _ (Thread/sleep 2000)
+          order' (tx/select-first *tx* :stock-order (first order-res))]
+      (fact "order has proper state" (-> order' last :state) => (:finished stock-action/states)))))
+
+(defn- create-inbound-order [system stock-order-type articles]
+  (with-tx system
+    (let [mas-load-unit-type (dosync (tx/insert *tx* :mas-load-unit-type (next-id *tx* :mas-load-unit-type) {:description "test" :ident "test" :tare-weight 1.0}))
+          vlicUnique (uid)
+          [batch batch' batch'' batch'''] (take 4 (repeatedly (partial uid)))
+          stock-definition [[nil {:article (-> articles first first) :amount 10 :batch batch :inbound-load-unit-type (first mas-load-unit-type)} ]
+                            [nil {:article (-> articles last first) :amount 1 :batch batch' :inbound-load-unit-type (first mas-load-unit-type) :reuse-previous-load-unit true}]
+                            [nil {:article (-> articles last first) :amount 5 :batch batch'' :inbound-load-unit-type (first mas-load-unit-type)}]
+                            [nil {:article (-> articles last first) :amount 5 :batch batch'''}]]
+          order (json/generate-string [nil {:vlicClientSideGenerated true :vlicUnique vlicUnique :ident (uid) :type (first stock-order-type) :targetLocation (-> (tx/select *tx* :location) last first)}])
+          items (json/generate-string stock-definition)
+          order-res (:body (order/req-create-order system order items nil nil))]
+      [stock-definition (tx/select-first *tx* :stock-order (first order-res))])))
+
+(facts 
+    "create inbound with outbound successor by workflow. the inbound is NOT finalized automatically. The outbound is finalized automatically"
+  (let [s (assoc (s/system :generate-testdata :small)
+                 :no-evictor true)
+        s (assoc s
+                 :namespaces (remove #(contains? #{'lambdaroyal.vlic.crosscutting.httpserver} %) (:namespaces s)))
+        s (s/start s)
+        _ (rn/compile-card-attr s :labeltype :items-code)
+        _ (rn/compile-card-attr s :labeltype :card-code)
+        _ (rn/compile-card-attr s :stock-order-type :code)]
+    (try
+      (with-tx s       
+        (reset! lambdaroyal.vlic.crosscutting.search/verbose false)
+        (let [stock-order-type (or (first (ps/search-sync *system* :stock-order-type "/description=inbound->outbound:inbound" Long/MAX_VALUE))
+                                   (throw (IllegalStateException. "Cannot load stock-order-type by query /description=inbound->outbound:inbound")))
+              stock-order-type' (or (first (ps/search-sync *system* :stock-order-type "/description=inbound->outbound:outbound" Long/MAX_VALUE))
+                                    (throw (IllegalStateException. "Cannot load stock-order-type by query /description=inbound->outbound:outbound")))
+              stocks-by-batch (fn [batch] (filter #(= batch (-> % last :batch)) (tx/select *tx* :stock)))
+              articles (take 2 (tx/select *tx* :article))
+              _ (dosync 
+                 (tx/alter-document *tx* :stock-order-type stock-order-type' assoc :auto-finalization true)
+                 (doseq [article articles]
+                   (tx/alter-document *tx* :article article assoc :temp "tiefkühl")))
+              location (first (tx/select *tx* :location))
+              [stock-definition order] (create-inbound-order s stock-order-type articles)
+              _ (doseq [x stock-definition]
+                  (println :stock-definition x))]
+          (fact "inbound order is created" (-> (tx/select-first *tx* :stock-order (first order)) last :state) => (:created stock-action/states))
+          (finish-order s order)
+          (fact "inbound order is finished" (-> (tx/select-first *tx* :stock-order (first order)) last :state) => (:finished stock-action/states))
+
+          ;; >>> CHECK THE INBOUND ORDER
+          (let [stock-order-items (order/items-by-order *tx* order)
+                [batch batch' batch'' batch'''] (map (comp :batch last) stock-order-items)]
+            (let [xs (ps/search-sync *system* :stock-order-dispatch-item (format "/order=%s /batch=%s" (first order) batch) Long/MAX_VALUE)]
+              (fact "there is one stock-order-dispatch-item for the inbound of the first stock" (count xs) => 1)
+              (let [stock-order-dispatch-item (tx/select-first *tx* :load-unit-dispatch-item (-> xs first last :load-unit-dispatch-item))]
+                (fact "there is a load-unit-dispatch-item underneath the stock-order-dispatch-item" stock-order-dispatch-item => truthy)
+                (let [xs (ps/search-sync *system* :stock-order-dispatch-item (format "/order=%s /batch=%s" (first order) batch') Long/MAX_VALUE)]
+                  (fact "there is one stock-order-dispatch-item for the inbound of the second stock" (count xs) => 1)
+                  (fact "stock-order-dispatch-item is reusing load-unit-dispatch-item from first stock" (-> xs first last :load-unit-dispatch-item) => (first stock-order-dispatch-item)))
+                (let [xs (ps/search-sync *system* :stock-order-dispatch-item (format "/order=%s /batch=%s" (first order) batch'') Long/MAX_VALUE)]
+                  (fact "there is one stock-order-dispatch-item for the inbound of the third stock" (count xs) => 1)
+                  (fact "stock-order-dispatch-item #3 is NOT reusing load-unit-dispatch-item from first stock" (= (-> xs first last :load-unit-dispatch-item) (first stock-order-dispatch-item)) => false)))))
+
+
+          (let [outbound-order (or (first (ps/search-sync *system* :stock-order (format "/predecessor-order=%s" (first order)) Long/MAX_VALUE)))]
+            (println :OUTBOUND-ORDER)
+            (fact "outbound stock order must be present" outbound-order => truthy)
+            (fact "outbound order is finished" (-> (tx/select-first *tx* :stock-order (first outbound-order)) last :state) => (:finished stock-action/states))
+            
+            (println "STOCK-ORDER-DISPATCH-ITEM (Inbound)")
+            (doseq [x (lambdaroyal.vlic.crosscutting.io-helper/pr-table s :stock-order-dispatch-item ((filter-fn s :stock-order-dispatch-item :order) *tx*  nil (first order)) :id :article :batch :order :location :amount :load-unit-dispatch-item)]
+              (println x))
+            (println "LOAD-UNIT-DISPATCH-ITEM (Inbound)")
+            (doseq [x (lambdaroyal.vlic.crosscutting.io-helper/pr-table s :load-unit-dispatch-item ((filter-fn s :load-unit-dispatch-item :order) *tx*  nil (first order)) :id :order)]
+              (println x))
+            (println "STOCK-ORDER-DISPATCH-ITEM (Outbound)")
+            (doseq [x (lambdaroyal.vlic.crosscutting.io-helper/pr-table s :stock-order-dispatch-item ((filter-fn s :stock-order-dispatch-item :order) *tx*  nil (first outbound-order)) :id :article :batch :order :location :amount :load-unit-dispatch-item)]
+              (println x))
+            (println "LOAD-UNIT-DISPATCH-ITEM (Outbound)")
+            (doseq [x (lambdaroyal.vlic.crosscutting.io-helper/pr-table s :load-unit-dispatch-item ((filter-fn s :load-unit-dispatch-item :order) *tx*  nil (first outbound-order)) :id :order)]
+              (println x))            
+            
+
+            (order/set-state-and-conquer s  outbound-order (:finished stock-action/states)))
+          (let [partial-delivery (tx/select-first *tx* :stock-order-partial-delivery )])
+          ))
+      (finally 
+        (do
+          (println :stop)
+          (s/stop s))))))
+
+
+
+
+
+

@@ -1,0 +1,49 @@
+(ns lambdaroyal.vlic.domain.test-create-load-unit-dispatch-item
+  (:require 
+   [lambdaroyal.memory.core.tx :as tx]
+   [lambdaroyal.memory.helper :refer :all]
+   [lambdaroyal.memory.abstraction.search :refer :all]
+   [lambdaroyal.vlic.crosscutting.boundary :as boundary]
+   [lambdaroyal.vlic.ioc :refer :all]
+   [midje.sweet :refer :all]
+   [lambdaroyal.vlic.system :as s]
+   [lambdaroyal.vlic.domain.order :as order]
+   [clojure.spec.alpha :as spec]
+   [clojure.spec.test.alpha :as stest]
+   [lambdaroyal.vlic.crosscutting.datastructures :refer [uid next-id]]
+   [lambdaroyal.vlic.crosscutting.runtime-namespace :as rn]
+   [lambdaroyal.vlic.domain.stock-action :as stock-action]
+   [lambdaroyal.vlic.crosscutting.interface.fieldset :refer [filter-fn-comb filter-fn]]
+   [lambdaroyal.vlic.crosscutting.io-helper :refer :all]
+   [lambdaroyal.vlic.crosscutting.io-helper]
+   [clojure.string :refer :all]
+   [clojure.java.io :as io]
+   [cheshire.core :as json]
+   [lambdaroyal.vlic.domain.order-confirmation :as oc])
+  (:gen-class))
+
+(let [s (assoc (s/system :generate-testdata :small)
+               :no-evictor true)
+      s (assoc s
+               :namespaces (remove #(contains? #{'lambdaroyal.vlic.crosscutting.httpserver} %) (:namespaces s)))
+      s (s/start s)]
+  (try
+    (with-tx s       
+      (println :stocks (tx/select *tx* :stocks))
+      (println :stock-order (select/tx *tx* :stock-order))
+      (println :tx-load-unit (select/tx *tx* :tx-load-unit))
+      )
+    (finally 
+      (do
+        (println :stop)
+        (s/stop s)))))
+
+
+
+
+
+
+
+
+
+

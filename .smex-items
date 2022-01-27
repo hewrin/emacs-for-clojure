@@ -1,39 +1,48 @@
 
 ;; ----- smex-history -----
 (
- projectile-find-file
- rainbow-delimiters-mode
- dired
  rgrep
- package-install
- apropos
- customize
+ cider-repl-clear-buffer
+ cider-connect
+ cider-scratch
+ paredit-mode
+ cider-debug-defun-at-point
+ dired
 )
 
 ;; ----- smex-data -----
 (
- (package-install . 3)
- (cider-jack-in . 8)
+ (package-install . 5)
+ (cider-jack-in . 9)
  (cider-report-bug . 1)
  (tab-bar-mode . 1)
  (comment-region . 5)
- (projectile-find-file . 82)
- (cider-connect . 93)
- (cider-connect-sibling-clj . 4)
- (cider . 7)
- (cider-repl-clear-buffer . 2)
- (cider-quit . 5)
+ (projectile-find-file . 573)
+ (cider-connect . 264)
+ (cider-connect-sibling-clj . 9)
+ (cider . 10)
+ (cider-repl-clear-buffer . 56)
+ (cider-quit . 24)
  (window-swap-states . 1)
- (dired . 8)
- (paredit-mode . 29)
- (rgrep . 14)
+ (dired . 16)
+ (paredit-mode . 53)
+ (rgrep . 164)
  (fill-paragraph . 1)
- (cider-scratch . 4)
- (indent-region . 2)
+ (cider-scratch . 62)
+ (indent-region . 3)
  (uncomment-region . 1)
  (tetris . 1)
  (doctor . 1)
  (customize . 1)
  (apropos . 1)
  (rainbow-delimiters-mode . 1)
+ (previous-line . 1)
+ (cider-debug-defun-at-point . 31)
+ (projectile-run-project . 6)
+ (vc-merge . 1)
+ (cider-inspect-last-result . 3)
+ (projectile-mode . 6)
+ (prog-mode . 1)
+ (cider-format-region . 1)
+ (org-capture . 1)
 )

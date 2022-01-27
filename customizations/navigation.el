@@ -60,3 +60,7 @@
 
 ;; projectile everywhere!
 (projectile-global-mode)
+
+;; My own customisations
+(global-set-key (kbd "M-p") 'projectile-find-file)
+(global-set-key (kbd "M-g f") 'rgrep)

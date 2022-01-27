@@ -1,0 +1,83 @@
+(ns lambdaroyal.vlic.crosscutting.crypt
+  (:require 
+            [clj-jwt.core  :refer :all]
+            [clj-jwt.key   :refer [private-key public-key]]
+            [clj-time.core :refer [now plus days]]
+            [clojure.tools.logging :as log])
+  (:import [java.security MessageDigest])
+  (:gen-class))
+
+;; --------------------------------------------------------------------
+;; DOMAIN LOGIC
+;; --------------------------------------------------------------------
+
+(def ^:const shs1 (char 37))
+(def ^:const private-ecdsa-file "ssh/id_ecdsa")
+(def ^{:dynamic true} *default-hash* "SHA-256")
+
+;; take from http://ideone.com/MoNJ14Z8 which was, in turn, gathered from
+;; Tom Lee's post "Clojure and MessageDigest"
+;;     (http://tomlee.co/2009/06/clojure-and-messagedigest/)
+(defn hexdigest
+  "Returns the hex digest of an object. Expects a string as input."
+  ([input] (hexdigest input *default-hash*))
+  ([input hash-algo]
+   (if (string? input)
+     (let [hash (MessageDigest/getInstance hash-algo)]
+       (. hash update (.getBytes input))
+       (let [digest (.digest hash)]
+         (apply str (map #(format "%02x" (bit-and % 0xff)) digest))))
+     (do
+       (println "Invalid input! Expected string, got" (type input))
+       nil))))
+
+(defn compare-sha256 [obj ref-hash]
+  "Compare an object to a hash; true if (= (hash obj) ref-hash)."
+  (= ref-hash (hexdigest obj "SHA-256")))
+
+(def sha256 (fn [input] (hexdigest input "SHA-256")))
+
+(defn create-jwt
+  "creates a json web token for the given user (user-tuple from the db) using ecliptic curve ECDSA256 signing. The result is stringified"
+  [private-key user & args]
+  (let [args (apply hash-map args)
+        claim {:userid (-> user first)
+               :email (-> user second :email .toLowerCase)
+               :sha (-> user last :sha)
+               :exp (plus (now) (days (or (-> user second :valid-days) 1)))
+               :iat (now)}
+        jwt (-> claim jwt (sign :ES256 private-key) to-str)]
+    jwt))
+
+(defn one-time-pad [system salt]
+  (println :private-key-atom (:private-key-atom system))
+  (sha256 (str shs1 "@(:private-key-atom system)" salt)))
+
+
+;; --------------------------------------------------------------------
+;; END - DOMAIN LOGIC
+;; --------------------------------------------------------------------
+
+;; --------------------------------------------------------------------
+;; GLUE
+;; --------------------------------------------------------------------
+
+
+
+;; --------------------------------------------------------------------
+;; END - GLUE
+;; --------------------------------------------------------------------
+
+;; --------------------------------------------------------------------
+;; SYSTEM CONTRIBUTOR CONTRACT
+;; --------------------------------------------------------------------
+
+(defn contrib-start [system]
+  (let [private-ecdsa-file (or (-> system :args :private-ecdsa-file) (:private-ecdsa-file system) private-ecdsa-file)
+        _ (reset! (:private-key-atom system) (private-key private-ecdsa-file))
+        _ (reset! (:public-key-atom system) (public-key private-ecdsa-file))]
+    system))
+
+;; --------------------------------------------------------------------
+;; END - SYSTEM CONTRIBUTOR CONTRACT
+;; --------------------------------------------------------------------

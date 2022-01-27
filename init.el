@@ -146,7 +146,7 @@
  ;; If there is more than one, they won't work right.
  '(coffee-tab-width 2)
  '(package-selected-packages
-   '(helm archive-downloader magit tagedit rainbow-delimiters projectile smex ido-completing-read+ cider clojure-mode-extra-font-locking clojure-mode paredit exec-path-from-shell)))
+   '(flycheck-clj-kondo helm archive-downloader magit tagedit rainbow-delimiters projectile smex ido-completing-read+ cider clojure-mode-extra-font-locking clojure-mode paredit exec-path-from-shell)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -158,3 +158,7 @@
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (windmove-default-keybindings)
+
+(require 'flycheck-clj-kondo)
+
+

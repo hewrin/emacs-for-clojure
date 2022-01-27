@@ -1,0 +1,24 @@
+(do
+  (require
+   '[lambdaroyal.memory.core.tx :as tx]
+   '[lambdaroyal.vlic.ioc :refer :all]
+   '[lambdaroyal.vlic.crosscutting.tx-decorator :as tx']
+   '[lambdaroyal.vlic.crosscutting.plansearch :refer [search-sync]]
+   '[lambdaroyal.vlic.crosscutting.interface.api-endpoint :refer [request-endpoint]]
+   '[clojure.core.async :refer [>! <! >!! <!! go-loop chan close! sub]]
+   '[lambdaroyal.vlic.domain.picking-strategy]
+   '[lambdaroyal.vlic.domain.order]
+   '[lambdaroyal.vlic.crosscutting.stream-processing :refer [register-channel close-channel buffer]]
+   '[lambdaroyal.vlic.crosscutting.autobahn :refer [send-to-all]]
+   '[clojure.tools.logging :as log])
+
+  (defn realize' [system event card rule]
+    (with-tx system
+      (if (-> card last :parent-order nil?)
+        (if-let [stock-order-type (tx/select-first *tx* :stock-order-type (-> card last :order))]
+          (if (and
+               (= "Q-Dispo Umschreibung" (-> stock-order-type last :name))
+               (= (-> card last :type) 5))
+            (do
+              (lambdaroyal.vlic.domain.picking-strategy/pick-order-with-line-items system card)
+              (lambdaroyal.vlic.comain.order/set-state-and-conquer *system* order (:finished stock-action/states)))))))))

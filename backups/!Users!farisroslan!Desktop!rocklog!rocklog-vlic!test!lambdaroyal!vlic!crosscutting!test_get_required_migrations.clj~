@@ -1,0 +1,28 @@
+(ns lambdaroyal.vlic.crosscutting.test-get-required-migrations
+  (:require [clojure.core.async :refer [>! >!! <! alts! alts!! timeout chan go go-loop pub sub put!]]
+            [lambdaroyal.memory.core.tx :as tx]
+            [lambdaroyal.vlic.crosscutting.tx-decorator :as tx']
+            [lambdaroyal.memory.helper :refer :all]
+            [lambdaroyal.memory.abstraction.search :refer :all]
+            [lambdaroyal.vlic.ioc :refer :all]
+            [lambdaroyal.vlic.crosscutting.datastructures :refer :all]
+            [midje.sweet :refer :all]
+            [clj-time.core :as t]
+            [clj-time.format :as f]
+            [lambdaroyal.vlic.system :as s]
+            [lambdaroyal.vlic.domain.search :refer :all]
+            [lambdaroyal.vlic.domain.inbound :as inbound]
+            [lambdaroyal.vlic.domain.xfer :as xfer]
+            lambdaroyal.vlic.crosscutting.cardmeta :as cm
+            [lambdaroyal.vlic.domain.test-search :refer :all]
+            [clojure.string :refer :all]
+            [lambdaroyal.vlic.main]
+            [lambdaroyal.vlic.crosscutting.autobahn :as autobahn]
+            [lambdaroyal.vlic.crosscutting.job-dispatch :refer [dispatch]]
+            [cheshire.core :as json])
+  (:gen-class))
+
+
+(let [system lambdaroyal.vlic.main/system]
+  (with-tx @system
+    (cm/cardmeta-cached nil :stock)))

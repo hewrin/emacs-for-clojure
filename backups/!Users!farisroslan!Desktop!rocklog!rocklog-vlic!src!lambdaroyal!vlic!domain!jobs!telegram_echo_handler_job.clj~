@@ -1,0 +1,47 @@
+(ns ^{:doc "Create a and register a channel and assign it to an atom. Makes external call to printing server and wait for response of the call. There will be two possible results, 1) Response from printing server 2) Request Timeout."}
+ lambdaroyal.vlic.domain.jobs.telegram-echo-handler-job
+  (:require
+   [lambdaroyal.memory.core.tx :as tx]
+   [lambdaroyal.vlic.crosscutting.cardmeta :refer [coerce-attr get-ui-trimmed]]
+   [lambdaroyal.vlic.crosscutting.tx-decorator :as tx']
+   [lambdaroyal.vlic.domain.order :refer [set-state-and-conquer]]
+   [lambdaroyal.vlic.domain.picking-strategy :as picking-strategy]
+   [lambdaroyal.memory.helper :refer :all]
+   [lambdaroyal.vlic.ioc :refer :all]
+   [clojure.tools.logging :as log]
+   [clojure.core.async :as async]
+   [lambdaroyal.vlic.crosscutting.autobahn :as autobahn]
+   [cheshire.core :as json]
+   [lambdaroyal.vlic.crosscutting.datastructures :refer :all])
+  (:gen-class))
+
+;; --------------------------------------------------------------------
+;; IMPLEMENTED CONTRACT 
+;; --------------------------------------------------------------------
+;; 
+
+(defn- inner [system job])
+
+(defn- perform'
+  "during configuration (in the higher order function) the order is expected to exist, and during execution time (the function
+  returned by the higher order function, the order is expected to exist in state = created"
+  [system job ch & params]
+  {:pre [(-> job :key1 number?)]}
+  (let [io-internal-proxy (:io-internal-proxy job)
+        session-id (-> io-internal-proxy last :sessionId)]
+    
+    [{:queue "telegram-handler" :description "Makes a call to the printing server"} (partial inner system job)]))
+
+;; --------------------------------------------------------------------
+;; END OF - IMPLEMENTED CONTRACT 
+;; --------------------------------------------------------------------
+
+(autobahn/send-to-one {:sessionId "LN2INUUN2KALTI0ZO" :fn "printing-server-ping"})
+
+
+
+
+
+
+
+

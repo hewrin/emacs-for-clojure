@@ -1,0 +1,61 @@
+(ns ^{:doc "This will send something from Rocklog to the Print Server that is connected to a TCP/IP client"}
+    lambdaroyal.vlic.domain.jobs.telegram-receiver-job
+  (:require
+   [lambdaroyal.memory.core.tx :as tx]
+   [lambdaroyal.vlic.crosscutting.cardmeta :refer [coerce-attr get-ui-trimmed]]
+   [lambdaroyal.vlic.crosscutting.tx-decorator :as tx']
+   [lambdaroyal.vlic.domain.order :refer [set-state-and-conquer]]
+   [lambdaroyal.vlic.domain.picking-strategy :as picking-strategy]
+   [lambdaroyal.memory.helper :refer :all]
+   [lambdaroyal.vlic.ioc :refer :all]
+   [clojure.tools.logging :as log]
+   [clojure.core.async :as async]
+   [lambdaroyal.vlic.crosscutting.autobahn :as autobahn]
+   [cheshire.core :as json]
+   [lambdaroyal.vlic.crosscutting.datastructures :refer :all])
+  (:gen-class))
+
+;; --------------------------------------------------------------------
+;; IMPLEMENTED CONTRACT 
+;; --------------------------------------------------------------------
+;; 
+
+(def verbose (atom true))
+
+(defn- inner [system {:keys [io-internal-proxy server telegram-data event fn]}]
+  (loop [i 0]
+    (if-let [io-internal-proxy' (with-tx system (tx/select-first *tx* :io-internal-proxy (first io-internal-proxy)))]
+      (let [session-id (-> io-internal-proxy' last :sessionId)]
+        (let [channels (or (get @autobahn/channels-by-id session-id) [])]
+          (if-let [channel (first channels)]
+            (autobahn/send-to-one {:sessionId session-id :base64-telegram-data telegram-data :event event :fn fn})           
+            (do
+              (if @verbose (println "[Telegram Handler Job] Waiting for connection round " i))
+              (Thread/sleep 5000)
+              (recur (inc i))))))
+      (println :no-internal-proxy)
+      ))
+  )
+
+(defn- perform'
+  "during configuration (in the higher order function) the order is expected to exist, and during execution time (the function
+  returned by the higher order function, the order is expected to exist in state = created"
+  [system job ch & params]
+  [{:queue (or (:queue job) "telegram-handler") :description (or (:description job) "Makes a call to the printing server") :key1 (:key1 job) :key2 (:key2 job) :key3 (:key3 job)} (partial inner system job)]
+  )
+
+;; --------------------------------------------------------------------
+;; END OF - IMPLEMENTED CONTRACT 
+;; --------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+

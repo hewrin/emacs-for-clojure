@@ -1,0 +1,131 @@
+(ns lambdaroyal.vlic.crosscutting.httpserver
+  (:require [lambdaroyal.memory.core.tx :as tx]
+            [lambdaroyal.vlic.crosscutting.tx-decorator :as tx']
+            [lambdaroyal.memory.helper :refer :all]
+            [lambdaroyal.vlic.ioc :refer :all]
+            [compojure.core :refer [defroutes routes GET POST DELETE ANY context]]
+            [compojure.route :as route]
+            [compojure.handler :as handler]
+            [org.httpkit.server :refer :all]
+            [ring.middleware.json :as middleware]
+            [ring.util.response :refer [file-response resource-response
+                                        status content-type header]]
+            [ring.util.mime-type :as mime]
+            [lambdaroyal.vlic.crosscutting.apikey :as apikey]
+            [lambdaroyal.memory.helper :refer :all]
+            [clojure.walk :as walk]
+            [clojure.string :as string]
+            [lambdaroyal.vlic.ioc :refer :all]
+            )
+  (:gen-class))
+
+
+(defn- add-wildcard [^String path]
+  (str path (if (.endsWith path "/") "*" "/*")))
+
+(defn- add-mime-type [response path options]
+  (if-let [mime-type (mime/ext-mime-type path (:mime-types options {}))]
+    (let [res (content-type response mime-type)]
+      (if (= mime-type "text/javascript") (header res "Content-Type" "text/javascript; charset=utf-8") 
+          res))
+    response))
+
+(defn- requires-auth [uri]
+  (let [uris [#"/static/landing-page/.*" #"/static/pd/.*" #"/static/.+\.html" #"/static/tabin/.*"]]
+    (let [result(some #(re-matches % uri) uris)]
+      result
+      )))
+
+
+(defn- parse-cookies
+  "Given a string of format 'foo=bar; foo2=bar2;' it will return a map {:foo 'bar' :foo2 'bar2'}"
+  [cookies]
+  (clojure.walk/keywordize-keys (into {} (map #(string/split % #"=" ) (map #(string/trim %) (string/split cookies #";"))))))
+
+(defn- is-authorized? [system args]
+  (let [args (walk/keywordize-keys args)
+        {headers :headers query-params :query-params} args
+        parsed-cookies (if (:cookie headers ) (parse-cookies (:cookie headers)) {})
+        params (merge parsed-cookies headers query-params)
+        { one-time-session :ots
+         one-time-pad :otp
+         apikey :apikey
+         user-id :u} params
+        _ (println :u user-id)
+        ]
+    
+    (if (string/blank? user-id)
+      (apikey/request-allowed system apikey one-time-session one-time-pad)
+      (if-let [user  (with-tx system (tx/select-first *tx* :user user-id))]
+        (:nologin (last user))
+        false))))
+
+(defn redirect-if-not-authenticated
+  "This function checks for uri that require authentication and also will check if the request passes authorization. If it fails, we will do redirection"
+  [system args]
+  (println :start)
+  (if (requires-auth (:uri args))
+    (do
+      (println :first)
+      (if-not (is-authorized? system args)
+        (let [{query-string :query-string uri :ur} args
+              redirect-uri (str "/rnd/login.html?redirect_uri=" (:uri args))
+              _ ( println :HERE)
+              redirect-uri (if-not (empty? query-string) (str redirect-uri "?" query-string) redirect-uri)]
+          {:status 302 :headers {"Location" redirect-uri }})))))
+
+
+(defn files' [system options args]
+  (println :start-files)
+  (let [options  (merge {:root "public"} options)
+        {{file-path :*} :route-params} args]
+    (if (requires-auth (:uri args))
+      (if-not (is-authorized? system args)
+        (let [{query-string :query-string uri :ur} args
+              redirect-uri (str "/rnd/login.html?redirect_uri=" (:uri args))
+              redirect-uri (if-not (empty? query-string) (str redirect-uri "?" query-string) redirect-uri)]
+          {:status 302 :headers {"Location" redirect-uri }})
+
+        (let [response (file-response file-path options)]
+          (if response
+            (add-mime-type response (str (:body response)) options))))
+      (let [response (file-response file-path options)]
+        (if response
+          (add-mime-type response (str (:body response)) options))))))
+
+(defn files
+  "Returns a route for serving static files from a directory.
+  Accepts the following options:
+  :root
+  : the root path where the files are stored, defaults to \"public\"
+  :mime-types
+  : an optional map of file extensions to mime types"
+  ([system path]
+   (files system path {}))
+  ([system path options]
+   (GET (add-wildcard path)
+        args
+        (files' system options args)
+        
+        )))
+
+(defn contrib-start [system]
+  (let [r (apply routes
+                 (conj
+                  (vec (:routes system))
+                  ;; static file url prefix /static, in `public` folder
+                  
+                  (files system  "/static/" {:root "public/app" :restricted true})
+                  (files system "/__assets__" {:root "public/rnd/dist/public/__assets__"})
+                  (files system "/rnd/" {:root "public/rnd/dist"})
+                  (route/not-found "<p>Page not found.</p>")))
+        r (-> r (middleware/wrap-json-body) (middleware/wrap-json-response))
+        port (or (-> system :args :port) 8080)]
+
+    (assoc system :httpserver (run-server (handler/site r) {:port port}))))
+
+(defn contrib-stop [system]
+  (do
+    (if-let [server (:httpserver system)]
+      (server :timeout 250))
+    (dissoc system :httpserver)))

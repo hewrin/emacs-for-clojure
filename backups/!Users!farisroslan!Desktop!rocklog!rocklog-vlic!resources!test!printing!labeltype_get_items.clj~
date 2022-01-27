@@ -1,0 +1,29 @@
+(do
+  (require '[lambdaroyal.memory.core.tx :as tx]
+           '[lambdaroyal.vlic.ioc :refer :all]
+           '[lambdaroyal.vlic.crosscutting.plansearch :as ps]
+           '[lambdaroyal.vlic.domain.printing :as printing])
+  (defn get-named-items [system labeltype collection article ]
+    (with-tx system
+      (let [_ (println :article article)
+            stocks (pmap (partial printing/normalize-card-for-templating system :stock) (take 3 (ps/search-sync system :stock (str "article=" (first article)))))
+            
+            subtemplate "!id! &  !amount!  & !location!  \\\\"]
+        {:stocks [stocks subtemplate] :stocks2 [stocks subtemplate]}
+        ))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,42 @@
+(ns lambdaroyal.vlic.crosscutting.test-multiple-sections
+  (:require
+   [clojure.core.async :refer [>! <! alts! timeout chan sub go go-loop]]
+   [midje.sweet :refer :all]
+   [lambdaroyal.vlic.system :as s]
+   [lambdaroyal.vlic.crosscutting.session :as session]
+   [lambdaroyal.vlic.crosscutting.user :as u]
+   [lambdaroyal.memory.core.tx :as tx]
+   [lambdaroyal.vlic.domain.printing :as printing]
+   [clojure.java.io :as io]
+   [lambdaroyal.vlic.crosscutting.plansearch :as ps]
+   [lambdaroyal.vlic.crosscutting.datastructures :refer :all]
+   [lambdaroyal.vlic.crosscutting.tx-decorator :as tx']
+   [lambdaroyal.vlic.crosscutting.data-filter :as data-filter]
+   [lambdaroyal.vlic.crosscutting.runtime-namespace :as rn]
+   [clj-jwt.key   :refer [private-key public-key public-key-from-string]]
+   [clj-jwt.core  :refer :all]
+   [lambdaroyal.vlic.ioc :refer :all])
+  (:import [org.apache.log4j BasicConfigurator]))
+
+(comment (BasicConfigurator/configure))
+
+(reset! printing/keep-input true)
+
+(let [s  (assoc (s/system :generate-testdata :small) :no-evictor true)
+      s (assoc s
+               :namespaces (remove #(contains? #{'lambdaroyal.vlic.crosscutting.httpserver} %) (:namespaces s)))
+      s (s/start s)]
+  (with-tx s
+    (try
+      (let [articles (tx/select *tx* :article)
+            labeltype (dosync (tx'/insert *tx* :labeltype (next-id *tx* :labeltype) {:description "Stock/stock order printing test" :card-type "stock-order" :items-code (slurp (io/resource "test/printing/labeltype_get_items.clj")) :template (slurp (io/resource "test/printing/get_named_items_template.tex")) :printing-type "pdflatex"}))
+            _ (rn/compile-card-attr s :labeltype :items-code)
+            [record [io]] (printing/print-report' s labeltype :article (take 1 articles) )
+            io' @io] 
+        (println :result-of-io io')
+        (println :record record))
+      
+      (finally (s/stop s)))))
+
+
+
